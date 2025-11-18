@@ -30,6 +30,7 @@ class ProjectController extends Controller
             'live_link' => 'nullable',
         ]);
 
+
         // Insert the project into the database
         $project = Project::create($validated);
 
