@@ -36,7 +36,7 @@ class ProjectController extends Controller
         return response()->json([
             'message' => 'Project created successfully',
             'data' => $project,
-        ], 201);
+        ], 200);
     }
 
     /**
@@ -44,7 +44,14 @@ class ProjectController extends Controller
      */
     public function show(string $id)
     {
-        //
+
+        // Get the project from the database
+        $project = Project::findOrFail($id);
+
+        return response()->json([
+            'message' => 'Project found successfully',
+            'data' => $project,
+        ],201);
     }
 
     /**
