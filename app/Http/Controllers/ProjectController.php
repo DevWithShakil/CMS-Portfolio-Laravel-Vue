@@ -59,7 +59,22 @@ class ProjectController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // Update project from the database
+        $project = Project::findOrFail($id);
+        $project->update($request->validate([
+            'title' => 'required',
+            'slug' => 'required|unique:projects',
+            'description' => 'required',
+            'tech_stack' => 'required',
+            'thumbnail' => 'nullable',
+            'github_link' => 'nullable',
+            'live_link' => 'nullable',
+        ]));
+
+        return response()->json([
+            'message' => 'Project updated successfully',
+            'data' => $project,
+        ], 202);
     }
 
     /**
