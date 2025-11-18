@@ -51,7 +51,7 @@ class ProjectController extends Controller
         return response()->json([
             'message' => 'Project found successfully',
             'data' => $project,
-        ],201);
+        ],200);
     }
 
     /**
@@ -74,7 +74,7 @@ class ProjectController extends Controller
         return response()->json([
             'message' => 'Project updated successfully',
             'data' => $project,
-        ], 202);
+        ], 200);
     }
 
     /**
@@ -82,6 +82,13 @@ class ProjectController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        // Delete project from the database
+        $project = Project::findOrFail($id);
+        $project->delete();
+
+        return response()->json([
+            'message' => 'Project deleted successfully',
+            'data' => $project,
+        ], 200);
     }
 }
