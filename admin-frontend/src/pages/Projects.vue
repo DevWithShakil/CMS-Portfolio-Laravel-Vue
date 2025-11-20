@@ -6,8 +6,10 @@
             <Topbar />
 
             <div class="p-6">
+                <!-- Header -->
                 <div class="flex justify-between items-center mb-4">
                     <h1 class="text-2xl font-bold">Projects</h1>
+
                     <button
                         class="bg-blue-600 text-white px-4 py-2 rounded"
                         @click="openCreateModal"
@@ -16,36 +18,47 @@
                     </button>
                 </div>
 
+                <!-- Search -->
+                <input
+                    v-model="search"
+                    @input="loadProjects('/api/admin/projects')"
+                    type="text"
+                    placeholder="Search projects..."
+                    class="border p-2 rounded w-64 mb-3"
+                />
+
                 <!-- Projects Table -->
-                <table class="w-full border">
+                <table class="w-full border shadow-md">
                     <thead>
-                        <tr class="bg-gray-200">
+                        <tr class="bg-gray-100 text-left">
                             <th class="p-2 border">ID</th>
                             <th class="p-2 border">Title</th>
                             <th class="p-2 border">Tech Stack</th>
                             <th class="p-2 border">Actions</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         <tr
                             v-for="project in projects"
                             :key="project.id"
-                            class="hover:bg-gray-100"
+                            class="hover:bg-gray-50 transition"
                         >
                             <td class="p-2 border">{{ project.id }}</td>
                             <td class="p-2 border">{{ project.title }}</td>
                             <td class="p-2 border">{{ project.tech_stack }}</td>
-                            <td class="p-2 border">
+
+                            <td class="p-2 border flex">
                                 <button
                                     @click="editProject(project)"
-                                    class="bg-yellow-500 text-white px-3 py-1 rounded mr-2"
+                                    class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded mr-2"
                                 >
                                     Edit
                                 </button>
 
                                 <button
-                                    @click="deleteProject(project.id)"
-                                    class="bg-red-600 text-white px-3 py-1 rounded"
+                                    @click="confirmDelete(project.id)"
+                                    class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
                                 >
                                     Delete
                                 </button>
@@ -54,12 +67,30 @@
                     </tbody>
                 </table>
 
-                <!-- Create / Edit Modal -->
+                <!-- Pagination -->
+                <div class="flex gap-3 mt-4">
+                    <button
+                        class="px-4 py-1 bg-gray-200 rounded"
+                        :disabled="!pagination.prev_page_url"
+                        @click="loadProjects(pagination.prev_page_url)"
+                    >
+                        Prev
+                    </button>
+                    <button
+                        class="px-4 py-1 bg-gray-200 rounded"
+                        :disabled="!pagination.next_page_url"
+                        @click="loadProjects(pagination.next_page_url)"
+                    >
+                        Next
+                    </button>
+                </div>
+
+                <!-- Modal -->
                 <div
                     v-if="showModal"
                     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
                 >
-                    <div class="bg-white p-6 rounded w-96">
+                    <div class="bg-white p-6 rounded shadow w-96">
                         <h2 class="text-xl font-bold mb-4">
                             {{ editMode ? "Edit Project" : "Add Project" }}
                         </h2>
@@ -70,30 +101,35 @@
                             placeholder="Title"
                             class="w-full mb-3 p-2 border rounded"
                         />
+
                         <input
                             v-model="form.slug"
                             type="text"
                             placeholder="Slug"
                             class="w-full mb-3 p-2 border rounded"
                         />
+
                         <input
                             v-model="form.tech_stack"
                             type="text"
                             placeholder="Tech Stack"
                             class="w-full mb-3 p-2 border rounded"
                         />
+
                         <input
                             v-model="form.thumbnail"
                             type="text"
-                            placeholder="Thumbnail"
+                            placeholder="Thumbnail URL"
                             class="w-full mb-3 p-2 border rounded"
                         />
+
                         <input
                             v-model="form.github_link"
                             type="text"
                             placeholder="GitHub Link"
                             class="w-full mb-3 p-2 border rounded"
                         />
+
                         <input
                             v-model="form.live_link"
                             type="text"
@@ -114,6 +150,7 @@
                             >
                                 Cancel
                             </button>
+
                             <button
                                 @click="
                                     editMode ? updateProject() : createProject()
@@ -132,13 +169,20 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { useToast } from "vue-toastification";
+import Swal from "sweetalert2";
+
 import api from "../services/api";
 import Sidebar from "../components/Sidebar.vue";
 import Topbar from "../components/Topbar.vue";
 
+const toast = useToast();
+
 const projects = ref([]);
+const pagination = ref({});
 const showModal = ref(false);
 const editMode = ref(false);
+const search = ref("");
 
 const form = ref({
     id: null,
@@ -151,13 +195,27 @@ const form = ref({
     live_link: "",
 });
 
-const loadProjects = async () => {
-    const res = await api.get("/projects");
-    projects.value = res.data;
+/* Load Projects with Search & Pagination */
+const loadProjects = async (url = "/api/admin/projects") => {
+    let finalUrl = url;
+
+    // Convert absolute URLs to relative URLs
+    if (url.startsWith("http")) {
+        const u = new URL(url);
+        finalUrl = u.pathname + u.search;
+    }
+
+    const res = await api.get(finalUrl, {
+        params: { search: search.value },
+    });
+
+    projects.value = res.data.data;
+    pagination.value = res.data;
 };
 
 onMounted(() => loadProjects());
 
+/* Open Create Modal */
 const openCreateModal = () => {
     editMode.value = false;
     showModal.value = true;
@@ -174,29 +232,47 @@ const openCreateModal = () => {
     };
 };
 
+/* Create */
 const createProject = async () => {
-    await api.post("/projects", form.value);
+    await api.post("/api/admin/projects", form.value);
     showModal.value = false;
     loadProjects();
+
+    toast.success("Project created successfully!");
 };
 
+/* Edit */
 const editProject = (project) => {
     editMode.value = true;
     showModal.value = true;
     form.value = { ...project };
 };
 
+/* Update */
 const updateProject = async () => {
-    await api.put(`/projects/${form.value.id}`, form.value);
+    await api.put(`/api/admin/projects/${form.value.id}`, form.value);
     showModal.value = false;
     loadProjects();
+    toast.success("Project updated successfully!");
 };
 
-const deleteProject = async (id) => {
-    if (confirm("Are you sure?")) {
-        await api.delete(`/projects/${id}`);
-        loadProjects();
-    }
+/* Delete with SweetAlert Confirmation */
+const confirmDelete = (id) => {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You cannot undo this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#e3342f",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            await api.delete(`/api/admin/projects/${id}`);
+            loadProjects();
+            toast.error("Project deleted!");
+        }
+    });
 };
 
 const closeModal = () => {
