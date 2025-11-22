@@ -46,20 +46,20 @@ class ContactController extends Controller
 
     // Update a contact in the database
     public function update(Request $request, string $id)
-    {
-        $contact = Contact::findOrFail($id);
-        $contact->update($request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'subject' => 'required',
-            'message' => 'required',
-        ]));
+{
+    $contact = Contact::findOrFail($id);
 
-        return response()->json([
-            'message' => 'Contact updated successfully',
-            'data' => $contact,
-        ], 201);
-    }
+    $validated = $request->validate([
+        'is_seen' => 'boolean'
+    ]);
+
+    $contact->update($validated);
+
+    return response()->json([
+        'message' => 'Contact updated successfully',
+        'data' => $contact
+    ]);
+}
 
     // Delete a contact from the database
     public function destroy(string $id)
