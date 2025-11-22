@@ -10,7 +10,22 @@
 </template>
 
 <script setup>
-const logout = () => {
-    alert("Logout clicked!");
+import { useRouter } from "vue-router";
+import api from "../services/api";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
+const router = useRouter();
+
+const logout = async () => {
+    try {
+        await api.post("/api/admin/logout");
+
+        localStorage.removeItem("token");
+        toast.success("Logged out successfully!");
+        router.push("/");
+    } catch (error) {
+        toast.error("Logout failed!");
+    }
 };
 </script>
