@@ -7,10 +7,18 @@ use App\Models\Skill;
 
 class SkillController extends Controller
 {
-    public function index()
-    {
-        return Skill::all();
+   public function index(Request $request)
+{
+    $query = Skill::query();
+
+    if ($request->search) {
+        $query->where('name', 'like', "%{$request->search}%")
+              ->orWhere('category', 'like', "%{$request->search}%");
     }
+
+    return $query->orderBy('id', 'desc')->paginate(10);
+}
+
 
 
     // Post a new skill to the database

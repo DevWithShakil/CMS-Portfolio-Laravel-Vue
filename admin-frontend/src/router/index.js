@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../pages/Login.vue'
 import Dashboard from '../pages/Dashboard.vue'
 import Projects from '../pages/Projects.vue'
+import Skills from '../pages/Skills.vue'
 
 const routes = [
     { path: '/', name: 'login', component: Login },
@@ -17,6 +18,14 @@ const routes = [
         component: Projects,
         meta: { requiresAuth: true }
     },
+
+    {
+        path: "/skills",
+        name: "skills",
+        component: Skills,
+        meta: { requiresAuth: true }
+    }
+
 ]
 
 

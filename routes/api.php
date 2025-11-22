@@ -35,7 +35,7 @@ Route::prefix('public')->group(function () {
 // -----------------------------------------
 // 📌 AUTH
 // -----------------------------------------
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->name('login'); // ⭐ Fix added
 
 // -----------------------------------------
 // 📌 ADMIN API (Protected CRUD Routes)
