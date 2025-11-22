@@ -3,6 +3,7 @@ import Login from '../pages/Login.vue'
 import Dashboard from '../pages/Dashboard.vue'
 import Projects from '../pages/Projects.vue'
 import Skills from '../pages/Skills.vue'
+import Experience from '../pages/Experience.vue'
 
 const routes = [
     { path: '/', name: 'login', component: Login },
@@ -24,7 +25,14 @@ const routes = [
         name: "skills",
         component: Skills,
         meta: { requiresAuth: true }
-    }
+    },
+
+    {
+        path: "/experience",
+        name: "experience",
+        component: Experience,
+        meta: { requiresAuth: true }
+    },
 
 ]
 
