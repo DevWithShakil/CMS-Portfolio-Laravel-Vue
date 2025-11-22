@@ -7,6 +7,7 @@ import Experience from '../pages/Experience.vue'
 import Education from '../pages/Education.vue'
 import Contacts from '../pages/Contacts.vue'
 import Settings from '../pages/Settings.vue'
+import Blogs from '../pages/Blogs.vue'
 
 const routes = [
     { path: '/', name: 'login', component: Login },
@@ -52,6 +53,12 @@ const routes = [
         path: "/settings",
         name: "settings",
         component: Settings,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: "/blogs",
+        name: "blogs",
+        component: Blogs,
         meta: { requiresAuth: true }
     },
 
