@@ -1,3 +1,15 @@
 <template>
-    <div class="p-6 text-xl">Home Page</div>
+    <div>
+        <HeroSection />
+    </div>
 </template>
+
+<script>
+import HeroSection from "@/components/HeroSection.vue";
+
+export default {
+    components: { HeroSection },
+};
+</script>
+
+<style scoped></style>

@@ -36,7 +36,7 @@
             <button
                 class="hidden md:block bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow transition"
             >
-                Login
+                Admin Login
             </button>
 
             <!-- Mobile Menu Button -->
@@ -76,11 +76,12 @@
                     {{ item.title }}
                 </router-link>
 
-                <button
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg shadow transition"
+                <router-link
+                    to="/admin/login"
+                    class="hidden md:block bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow transition"
                 >
-                    Login
-                </button>
+                    Admin Login
+                </router-link>
             </div>
         </transition>
     </nav>
@@ -93,9 +94,10 @@ export default {
             open: false,
             menus: [
                 { id: 1, title: "Home", slug: "/" },
-                { id: 2, title: "Blogs", slug: "/blogs" },
-                { id: 3, title: "About", slug: "/about" },
-                { id: 4, title: "Contact", slug: "/contact" },
+                { id: 2, title: "Projects", slug: "/projects" },
+                { id: 3, title: "Blogs", slug: "/blogs" },
+                { id: 4, title: "About", slug: "/about" },
+                { id: 5, title: "Contact", slug: "/contact" },
             ],
         };
     },
