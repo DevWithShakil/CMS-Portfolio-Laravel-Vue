@@ -316,24 +316,6 @@
                                     class="px-2 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold uppercase rounded border border-blue-500/20"
                                     >New</span
                                 >
-
-                                <div
-                                    class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity translate-x-4 group-hover:translate-x-0 duration-300"
-                                >
-                                    <button
-                                        @click.stop="markSeen(c)"
-                                        v-if="!c.is_seen"
-                                        class="p-2 bg-slate-800 hover:bg-emerald-500/20 text-slate-400 hover:text-emerald-400 rounded-lg transition-colors"
-                                    >
-                                        <CheckCircle class="w-4 h-4" />
-                                    </button>
-                                    <button
-                                        @click.stop="deleteContact(c.id)"
-                                        class="p-2 bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 rounded-lg transition-colors"
-                                    >
-                                        <Trash2 class="w-4 h-4" />
-                                    </button>
-                                </div>
                             </div>
                         </div>
 
@@ -400,7 +382,7 @@
                             >
                                 <img
                                     v-if="p.thumbnail"
-                                    :src="p.thumbnail"
+                                    :src="getThumbnailUrl(p.thumbnail)"
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                 />
                                 <div
@@ -455,7 +437,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router"; // Router import করুন
+import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import Swal from "sweetalert2";
 import api from "../services/api";
@@ -479,7 +461,7 @@ import {
     User,
 } from "lucide-vue-next";
 
-const router = useRouter(); // Router init
+const router = useRouter();
 const toast = useToast();
 
 const stats = ref({
@@ -505,6 +487,12 @@ function normalizeUrl(url) {
     } catch (e) {}
     return url;
 }
+
+// ✅ Image URL Helper Function
+const getThumbnailUrl = (path) => {
+    if (!path) return null;
+    return path.startsWith("http") ? path : `http://127.0.0.1:8000${path}`;
+};
 
 const loadStats = async () => {
     try {

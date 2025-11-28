@@ -13,6 +13,7 @@ import Education from '../pages/Education.vue'
 import Contacts from '../pages/Contacts.vue'
 import Settings from '../pages/Settings.vue'
 import Blogs from '../pages/Blogs.vue'
+import Profile from '../pages/Profile.vue';
 
 const routes = [
     /**
@@ -41,6 +42,7 @@ const routes = [
             { path: 'contacts', name: 'contacts', component: Contacts },
             { path: 'settings', name: 'settings', component: Settings },
             { path: 'blogs', name: 'blogs', component: Blogs },
+            { path: 'profile', name: 'profile', component: Profile },
         ]
     },
 

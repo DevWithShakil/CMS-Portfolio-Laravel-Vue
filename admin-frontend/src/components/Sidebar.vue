@@ -78,9 +78,8 @@
                 <span
                     v-if="isOpen"
                     class="relative z-10 whitespace-nowrap transition-opacity duration-200"
+                    >{{ item.name }}</span
                 >
-                    {{ item.name }}
-                </span>
 
                 <div
                     v-if="!isOpen"
@@ -88,39 +87,44 @@
                 >
                     {{ item.name }}
                 </div>
-
-                <ChevronRight
-                    v-if="isOpen && $route.path.includes(item.path)"
-                    class="w-4 h-4 ml-auto opacity-100 transition-all shrink-0"
-                />
             </router-link>
         </nav>
 
         <div
             class="p-4 border-t border-slate-800/60 bg-slate-900/50 overflow-hidden"
         >
-            <div
-                class="flex items-center gap-3 px-2 py-2 rounded-xl bg-slate-800/40 border border-slate-700/30 mb-3"
+            <router-link
+                to="/admin/profile"
+                class="flex items-center gap-3 px-2 py-2 rounded-xl bg-slate-800/40 border border-slate-700/30 mb-3 hover:bg-slate-800 transition-colors cursor-pointer"
                 :class="
                     isOpen ? '' : 'justify-center border-0 bg-transparent p-0'
                 "
             >
-                <div
-                    class="w-8 h-8 rounded-full bg-gradient-to-tr from-slate-700 to-slate-600 flex items-center justify-center text-xs text-white font-bold ring-2 ring-slate-800 shrink-0"
-                >
-                    AD
+                <div class="relative shrink-0">
+                    <img
+                        :src="
+                            userAvatar ||
+                            'https://ui-avatars.com/api/?name=Admin&background=0f172a&color=cbd5e1'
+                        "
+                        class="w-9 h-9 rounded-full object-cover ring-2 ring-slate-800"
+                    />
+                    <div
+                        class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-slate-900 rounded-full"
+                    ></div>
                 </div>
 
                 <div
                     v-if="isOpen"
                     class="flex-1 min-w-0 transition-opacity duration-300"
                 >
-                    <p class="text-sm font-bold text-white truncate">Admin</p>
+                    <p class="text-sm font-bold text-white truncate">
+                        {{ userName }}
+                    </p>
                     <p class="text-[10px] text-slate-400 truncate">
-                        admin@example.com
+                        {{ userEmail }}
                     </p>
                 </div>
-            </div>
+            </router-link>
 
             <button
                 @click="handleLogout"
@@ -134,8 +138,9 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from "vue";
+import { defineProps, defineEmits, ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
+import api from "../services/api"; // Ensure API service is imported
 import {
     LayoutDashboard,
     Briefcase,
@@ -146,27 +151,22 @@ import {
     Settings,
     FileText,
     LogOut,
-    ChevronRight,
     AlignLeft,
     AlignJustify,
 } from "lucide-vue-next";
 
-// Props & Emits
-const props = defineProps({
-    isOpen: {
-        type: Boolean,
-        required: true,
-    },
-});
-
+// Props & Router
+const props = defineProps({ isOpen: { type: Boolean, required: true } });
 const emit = defineEmits(["toggleSidebar"]);
-
-const emitToggle = () => {
-    emit("toggleSidebar");
-};
-
+const emitToggle = () => emit("toggleSidebar");
 const router = useRouter();
 
+// State Variables
+const userAvatar = ref(null);
+const userName = ref("Admin");
+const userEmail = ref("admin@example.com");
+
+// Menu
 const menuItems = [
     { name: "Dashboard", path: "/admin/dashboard", icon: LayoutDashboard },
     { name: "Projects", path: "/admin/projects", icon: Briefcase },
@@ -178,14 +178,60 @@ const menuItems = [
     { name: "Settings", path: "/admin/settings", icon: Settings },
 ];
 
+/* --------------------------------------
+   logic to load Avatar & Info
+-------------------------------------- */
+
+// 1. Fetch Avatar from Settings API
+const loadUserAvatar = async () => {
+    try {
+        const res = await api.get("/api/admin/settings");
+        const data = Array.isArray(res.data)
+            ? res.data[0]
+            : res.data.data || res.data;
+
+        if (data && data.profile_image) {
+            const path = data.profile_image;
+            userAvatar.value = path.startsWith("http")
+                ? path
+                : `http://127.0.0.1:8000${path}`;
+        }
+    } catch (e) {
+        console.error("Avatar load error", e);
+    }
+};
+
+// 2. Fetch Name/Email from LocalStorage (Updated by Profile Page)
+const updateSidebarInfo = () => {
+    userName.value = localStorage.getItem("admin_name") || "Admin";
+    userEmail.value =
+        localStorage.getItem("admin_email") || "admin@example.com";
+};
+
+// Lifecycle Hooks
+onMounted(() => {
+    loadUserAvatar();
+    updateSidebarInfo();
+
+    // Listen for updates from Profile page
+    window.addEventListener("profile-updated", updateSidebarInfo);
+});
+
+onUnmounted(() => {
+    window.removeEventListener("profile-updated", updateSidebarInfo);
+});
+
+// Logout
 const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("admin_name");
+    localStorage.removeItem("admin_email");
     router.push("/");
 };
 </script>
 
 <style scoped>
 .custom-scrollbar::-webkit-scrollbar {
-    width: 0px; /* Hide scrollbar for cleaner look in sidebar */
+    width: 0px;
 }
 </style>

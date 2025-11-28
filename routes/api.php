@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Cache\RateLimiting\Limit;
-
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\{
     ProjectController,
     SkillController,
@@ -15,6 +15,7 @@ use App\Http\Controllers\{
     BlogController,
     AuthController
 };
+
 
 // Rate Limiter
 RateLimiter::for('api', function ($request) {
@@ -43,6 +44,8 @@ Route::post('/login', [AuthController::class, 'login'])->name('login'); // ⭐ F
 Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/profile', [ProfileController::class, 'index']);
+    Route::put('/profile', [ProfileController::class, 'update']);
 
     Route::apiResource('projects', ProjectController::class);
     Route::apiResource('skills', SkillController::class);
@@ -52,4 +55,5 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::apiResource('settings', SettingController::class);
     Route::apiResource('blogs', BlogController::class);
     Route::apiResource('categories', BlogCategoryController::class);
+
 });

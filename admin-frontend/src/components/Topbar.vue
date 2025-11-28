@@ -9,7 +9,6 @@
                 >
                     <Menu class="w-6 h-6" />
                 </button>
-
                 <div>
                     <h1
                         class="text-xl font-bold text-white capitalize tracking-wide flex items-center gap-2"
@@ -26,7 +25,7 @@
 
             <div class="flex items-center gap-4">
                 <div
-                    class="hidden md:flex items-center bg-slate-800/50 rounded-xl px-4 py-2.5 border border-slate-700/50 focus-within:ring-2 focus-within:ring-blue-500/50 focus-within:border-blue-500/50 transition-all shadow-inner"
+                    class="hidden md:flex items-center bg-slate-800/50 rounded-xl px-4 py-2.5 border border-slate-700/50 focus-within:ring-2 focus-within:ring-blue-500/50 transition-all"
                 >
                     <Search class="w-4 h-4 text-slate-400" />
                     <input
@@ -37,11 +36,11 @@
                 </div>
 
                 <button
-                    class="relative p-2.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-all duration-300 group"
+                    class="relative p-2.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-all group"
                 >
                     <Bell class="w-5 h-5 group-hover:animate-swing" />
                     <span
-                        class="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full shadow-[0_0_8px_rgba(244,63,94,0.6)] animate-pulse"
+                        class="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full animate-pulse"
                     ></span>
                 </button>
 
@@ -54,7 +53,10 @@
                     >
                         <div class="relative">
                             <img
-                                src="https://ui-avatars.com/api/?name=Admin+User&background=0f172a&color=cbd5e1"
+                                :src="
+                                    userAvatar ||
+                                    'https://ui-avatars.com/api/?name=Admin&background=0f172a&color=cbd5e1'
+                                "
                                 alt="Avatar"
                                 class="w-10 h-10 rounded-full object-cover border-2 border-slate-700 group-hover:border-blue-500 transition-colors"
                             />
@@ -65,11 +67,12 @@
 
                         <div class="hidden md:flex flex-col items-start pr-2">
                             <span
-                                class="text-sm font-bold text-slate-200 leading-none group-hover:text-white transition-colors"
-                                >Admin</span
+                                class="text-sm font-bold text-slate-200 leading-none group-hover:text-white"
                             >
+                                {{ userName }}
+                            </span>
                             <span
-                                class="text-[10px] text-slate-500 font-medium mt-1 group-hover:text-blue-400 transition-colors"
+                                class="text-[10px] text-slate-500 font-medium mt-1"
                                 >Super Admin</span
                             >
                         </div>
@@ -89,7 +92,7 @@
                     >
                         <div
                             v-if="isDropdownOpen"
-                            class="absolute right-0 mt-3 w-60 bg-slate-900 rounded-xl shadow-2xl border border-slate-800 py-2 origin-top-right ring-1 ring-white/5 focus:outline-none z-50"
+                            class="absolute right-0 mt-3 w-60 bg-slate-900 rounded-xl shadow-2xl border border-slate-800 py-2 origin-top-right z-50"
                         >
                             <div
                                 class="px-5 py-3 border-b border-slate-800 mb-2"
@@ -107,24 +110,27 @@
                             </div>
 
                             <div class="px-2 space-y-1">
-                                <a
-                                    href="/admin/settings"
+                                <router-link
+                                    to="/admin/profile"
                                     class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 rounded-lg hover:bg-slate-800 hover:text-white transition-colors group"
+                                    @click="isDropdownOpen = false"
                                 >
                                     <User
-                                        class="w-4 h-4 mr-3 text-slate-500 group-hover:text-blue-400 transition-colors"
+                                        class="w-4 h-4 mr-3 text-slate-500 group-hover:text-blue-400"
                                     />
                                     Profile
-                                </a>
-                                <a
-                                    href="/admin/settings"
+                                </router-link>
+
+                                <router-link
+                                    to="/admin/settings"
                                     class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 rounded-lg hover:bg-slate-800 hover:text-white transition-colors group"
+                                    @click="isDropdownOpen = false"
                                 >
                                     <Settings
-                                        class="w-4 h-4 mr-3 text-slate-500 group-hover:text-blue-400 transition-colors"
+                                        class="w-4 h-4 mr-3 text-slate-500 group-hover:text-blue-400"
                                     />
                                     Settings
-                                </a>
+                                </router-link>
                             </div>
 
                             <div
@@ -171,64 +177,82 @@ const route = useRoute();
 
 const isDropdownOpen = ref(false);
 const dropdownRef = ref(null);
+const userAvatar = ref(null);
 
-// Get current route name
-const currentRouteName = computed(() => {
-    return route.name ? route.name.toString().replace("-", " ") : "Dashboard";
-});
+const currentRouteName = computed(() =>
+    route.name ? route.name.toString().replace("-", " ") : "Dashboard"
+);
 
-const toggleDropdown = () => {
-    isDropdownOpen.value = !isDropdownOpen.value;
-};
+const toggleDropdown = () => (isDropdownOpen.value = !isDropdownOpen.value);
 
-// Close dropdown if clicked outside
 const closeDropdown = (e) => {
     if (dropdownRef.value && !dropdownRef.value.contains(e.target)) {
         isDropdownOpen.value = false;
     }
 };
 
+const userName = ref("Admin");
+const userRole = ref("Super Admin");
+
+const loadUserInfo = () => {
+    const storedName = localStorage.getItem("admin_name");
+    if (storedName) {
+        userName.value = storedName;
+    } else {
+        fetchProfileData();
+    }
+};
+
+const fetchProfileData = async () => {
+    try {
+        const res = await api.get("/api/admin/profile");
+        userName.value = res.data.name;
+        localStorage.setItem("admin_name", res.data.name);
+    } catch (e) {}
+};
+
 onMounted(() => {
-    document.addEventListener("click", closeDropdown);
+    loadUserAvatar();
+    loadUserInfo();
+
+    window.addEventListener("profile-updated", loadUserInfo);
 });
 
 onUnmounted(() => {
     document.removeEventListener("click", closeDropdown);
+    window.removeEventListener("profile-updated", loadUserInfo);
 });
 
-const logout = async () => {
+// ✅ Load Profile Image from Settings API
+const loadUserAvatar = async () => {
     try {
-        localStorage.removeItem("token");
-        toast.success("See you again soon!", { timeout: 2000 });
-        router.push("/");
-    } catch (error) {
-        localStorage.removeItem("token");
-        router.push("/");
-        toast.error("Logged out locally.");
+        const res = await api.get("/api/admin/settings");
+        const data = Array.isArray(res.data)
+            ? res.data[0]
+            : res.data.data || res.data;
+
+        if (data && data.profile_image) {
+            // Fix URL Path
+            const path = data.profile_image;
+            userAvatar.value = path.startsWith("http")
+                ? path
+                : `http://127.0.0.1:8000${path}`;
+        }
+    } catch (e) {
+        console.error("Avatar load failed", e);
     }
 };
-</script>
 
-<style scoped>
-@keyframes swing {
-    0%,
-    100% {
-        transform: rotate(0deg);
-    }
-    20% {
-        transform: rotate(15deg);
-    }
-    40% {
-        transform: rotate(-10deg);
-    }
-    60% {
-        transform: rotate(5deg);
-    }
-    80% {
-        transform: rotate(-5deg);
-    }
-}
-.animate-swing {
-    animation: swing 0.5s ease-in-out;
-}
-</style>
+onMounted(() => {
+    document.addEventListener("click", closeDropdown);
+    loadUserAvatar(); // Fetch image on mount
+});
+
+onUnmounted(() => document.removeEventListener("click", closeDropdown));
+
+const logout = async () => {
+    localStorage.removeItem("token");
+    router.push("/");
+    toast.success("Logged out successfully");
+};
+</script>
