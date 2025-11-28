@@ -1,77 +1,70 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Education;
 
+use App\Models\Education;
 use Illuminate\Http\Request;
 
 class EducationController extends Controller
 {
-    // Get all educations from the database
-    public function index()
+    public function index(Request $request)
     {
-        return Education::all();
+        $query = Education::query();
+
+        if ($request->search) {
+            $query->where('degree', 'like', '%' . $request->search . '%')
+                  ->orWhere('institution', 'like', '%' . $request->search . '%');
+        }
+
+        return $query->latest()->paginate(10);
     }
 
-    // Post a new education to the database
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'degree' => 'required',
-            'institution' => 'required',
-            'duration' => 'required',
-            'description' => 'required',
+            'degree'      => 'required|string|max:255',
+            'institution' => 'required|string|max:255',
+            'duration'    => 'required|string|max:50',
+            'description' => 'required|string',
         ]);
 
-        // Insert the education into the database
         $education = Education::create($validated);
 
         return response()->json([
             'message' => 'Education created successfully',
-            'data' => $education,
+            'data'    => $education,
         ], 201);
     }
 
-    // Get a single education from the database
     public function show(string $id)
     {
-        // Get the education from the database
         $education = Education::findOrFail($id);
-
-        return response()->json([
-            'message' => 'Education found successfully',
-            'data' => $education,
-        ], 201);
+        return response()->json(['data' => $education], 200);
     }
 
-    // Update a education in the database
     public function update(Request $request, string $id)
     {
-        // Update education from the database
         $education = Education::findOrFail($id);
-        $education->update($request->validate([
-            'degree' => 'required',
-            'institution' => 'required',
-            'duration' => 'required',
-            'description' => 'required',
-        ]));
+
+        $validated = $request->validate([
+            'degree'      => 'required|string|max:255',
+            'institution' => 'required|string|max:255',
+            'duration'    => 'required|string|max:50',
+            'description' => 'required|string',
+        ]);
+
+        $education->update($validated);
 
         return response()->json([
             'message' => 'Education updated successfully',
-            'data' => $education,
-        ], 201);
+            'data'    => $education,
+        ], 200);
     }
 
-    // Delete a education from the database
     public function destroy(string $id)
     {
-        // Delete education from the database
         $education = Education::findOrFail($id);
         $education->delete();
-
-        return response()->json([
-            'message' => 'Education deleted successfully',
-            'data' => $education,
-        ], 201);
+        return response()->json(['message' => 'Deleted successfully'], 200);
     }
 }

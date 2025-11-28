@@ -1,153 +1,285 @@
 <template>
-    <div class="flex">
-        <Sidebar />
-
-        <div class="flex-1 ml-64">
-            <Topbar />
-
-            <div class="p-6">
-                <!-- Header -->
-                <div class="flex justify-between items-center mb-4">
-                    <h1 class="text-2xl font-bold">Education</h1>
-
-                    <button
-                        class="bg-blue-600 text-white px-4 py-2 rounded"
-                        @click="openCreateModal"
+    <div class="min-h-screen space-y-6">
+        <div
+            class="flex flex-col md:flex-row md:items-center justify-between gap-4"
+        >
+            <div>
+                <h1 class="text-3xl font-bold text-white tracking-tight">
+                    Academic
+                    <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400"
+                        >Background</span
                     >
-                        + Add Education
-                    </button>
-                </div>
+                </h1>
+                <p class="text-sm text-slate-400 mt-1">
+                    Showcase your degrees and certifications.
+                </p>
+            </div>
 
-                <!-- Search -->
+            <button
+                @click="openCreateModal"
+                class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg shadow-indigo-500/20 transition-all hover:-translate-y-0.5"
+            >
+                <Plus class="w-5 h-5" />
+                <span>Add Education</span>
+            </button>
+        </div>
+
+        <div
+            class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col md:flex-row gap-4 justify-between items-center shadow-sm"
+        >
+            <div class="relative w-full md:w-80 group">
+                <Search
+                    class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors"
+                />
                 <input
                     v-model="search"
-                    @input="loadEducation"
+                    @input="loadEducation('/api/admin/education')"
                     type="text"
-                    placeholder="Search education..."
-                    class="border p-2 rounded w-64 mb-3"
+                    placeholder="Search degree..."
+                    class="w-full bg-slate-950 border border-slate-800 text-slate-200 text-sm rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder:text-slate-600"
+                />
+            </div>
+            <div class="text-xs text-slate-500 font-medium">
+                Qualifications:
+                <span class="text-indigo-400">{{
+                    pagination.total || education.length
+                }}</span>
+            </div>
+        </div>
+
+        <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div
+                v-for="n in 4"
+                :key="n"
+                class="bg-slate-900 border border-slate-800 rounded-2xl p-6 animate-pulse flex gap-4"
+            >
+                <div class="w-14 h-14 bg-slate-800 rounded-xl shrink-0"></div>
+                <div class="flex-1 space-y-3">
+                    <div class="h-5 bg-slate-800 rounded w-3/4"></div>
+                    <div class="h-4 bg-slate-800 rounded w-1/2"></div>
+                    <div class="h-10 bg-slate-800 rounded w-full"></div>
+                </div>
+            </div>
+        </div>
+
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div
+                v-for="edu in education"
+                :key="edu.id"
+                class="group bg-slate-900 border border-slate-800 hover:border-indigo-500/30 rounded-2xl p-6 shadow-lg transition-all hover:-translate-y-1 relative overflow-hidden"
+            >
+                <GraduationCap
+                    class="absolute -bottom-4 -right-4 w-32 h-32 text-slate-800/50 transform rotate-12 group-hover:text-indigo-900/20 transition-colors pointer-events-none"
                 />
 
-                <!-- Table -->
-                <table class="w-full border shadow-md">
-                    <thead>
-                        <tr class="bg-gray-100 text-left">
-                            <th class="p-2 border">ID</th>
-                            <th class="p-2 border">Degree</th>
-                            <th class="p-2 border">Institution</th>
-                            <th class="p-2 border">Year</th>
-                            <th class="p-2 border">Actions</th>
-                        </tr>
-                    </thead>
+                <div class="relative z-10 flex items-start gap-5">
+                    <div
+                        class="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 border border-indigo-500/20 shrink-0 group-hover:scale-110 transition-transform"
+                    >
+                        <School class="w-7 h-7" />
+                    </div>
 
-                    <tbody>
-                        <tr
-                            v-for="edu in education"
-                            :key="edu.id"
-                            class="hover:bg-gray-50"
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3
+                                    class="text-lg font-bold text-white leading-tight group-hover:text-indigo-300 transition-colors"
+                                >
+                                    {{ edu.degree }}
+                                </h3>
+                                <p
+                                    class="text-sm text-slate-400 mt-1 font-medium"
+                                >
+                                    {{ edu.institution }}
+                                </p>
+                            </div>
+
+                            <span
+                                class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 text-xs font-semibold text-indigo-300 border border-slate-700 whitespace-nowrap"
+                            >
+                                <Calendar class="w-3 h-3" /> {{ edu.duration }}
+                            </span>
+                        </div>
+
+                        <div class="mt-4 pt-4 border-t border-slate-800/50">
+                            <p class="text-sm text-slate-500 line-clamp-2">
+                                {{ edu.description }}
+                            </p>
+                        </div>
+
+                        <div
+                            class="mt-4 flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0"
                         >
-                            <td class="p-2 border">{{ edu.id }}</td>
-                            <td class="p-2 border">{{ edu.degree }}</td>
-                            <td class="p-2 border">{{ edu.institution }}</td>
-                            <td class="p-2 border">{{ edu.year }}</td>
-
-                            <td class="p-2 border">
-                                <button
-                                    @click="editEducation(edu)"
-                                    class="bg-yellow-500 text-white px-3 py-1 rounded mr-2"
-                                >
-                                    Edit
-                                </button>
-
-                                <button
-                                    @click="confirmDelete(edu.id)"
-                                    class="bg-red-600 text-white px-3 py-1 rounded"
-                                >
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <!-- Pagination -->
-                <div class="flex gap-3 mt-4">
-                    <button
-                        class="px-4 py-1 bg-gray-200 rounded"
-                        :disabled="!pagination.prev_page_url"
-                        @click="loadEducation(pagination.prev_page_url)"
-                    >
-                        Prev
-                    </button>
-
-                    <button
-                        class="px-4 py-1 bg-gray-200 rounded"
-                        :disabled="!pagination.next_page_url"
-                        @click="loadEducation(pagination.next_page_url)"
-                    >
-                        Next
-                    </button>
-                </div>
-
-                <!-- Modal -->
-                <div
-                    v-if="showModal"
-                    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-                >
-                    <div class="bg-white p-6 rounded shadow w-96">
-                        <h2 class="text-xl font-bold mb-4">
-                            {{ editMode ? "Edit Education" : "Add Education" }}
-                        </h2>
-
-                        <input
-                            v-model="form.degree"
-                            type="text"
-                            placeholder="Degree (e.g. BSc in CSE)"
-                            class="w-full mb-3 p-2 border rounded"
-                        />
-
-                        <input
-                            v-model="form.institution"
-                            type="text"
-                            placeholder="Institution"
-                            class="w-full mb-3 p-2 border rounded"
-                        />
-
-                        <input
-                            v-model="form.year"
-                            type="text"
-                            placeholder="Passing Year"
-                            class="w-full mb-3 p-2 border rounded"
-                        />
-
-                        <textarea
-                            v-model="form.description"
-                            placeholder="Short Description"
-                            class="w-full mb-3 p-2 border rounded"
-                        ></textarea>
-
-                        <div class="flex justify-end">
                             <button
-                                @click="closeModal"
-                                class="mr-2 px-4 py-2 bg-gray-400 text-white rounded"
+                                @click="editEducation(edu)"
+                                class="flex items-center gap-1.5 text-xs font-medium text-amber-400 hover:text-amber-300 transition-colors"
                             >
-                                Cancel
+                                <Edit3 class="w-3.5 h-3.5" /> Edit
                             </button>
-
+                            <div class="w-px h-4 bg-slate-700"></div>
                             <button
-                                @click="
-                                    editMode
-                                        ? updateEducation()
-                                        : createEducation()
-                                "
-                                class="px-4 py-2 bg-blue-600 text-white rounded"
+                                @click="confirmDelete(edu.id)"
+                                class="flex items-center gap-1.5 text-xs font-medium text-rose-400 hover:text-rose-300 transition-colors"
                             >
-                                {{ editMode ? "Update" : "Create" }}
+                                <Trash2 class="w-3.5 h-3.5" /> Delete
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div
+            v-if="
+                !loading &&
+                (pagination.prev_page_url || pagination.next_page_url)
+            "
+            class="flex justify-between items-center bg-slate-900 p-4 rounded-xl border border-slate-800"
+        >
+            <button
+                class="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors"
+                :class="
+                    !pagination.prev_page_url
+                        ? 'text-slate-600 cursor-not-allowed'
+                        : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                "
+                :disabled="!pagination.prev_page_url"
+                @click="loadEducation(pagination.prev_page_url)"
+            >
+                <ChevronLeft class="w-4 h-4" /> Previous
+            </button>
+            <button
+                class="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors"
+                :class="
+                    !pagination.next_page_url
+                        ? 'text-slate-600 cursor-not-allowed'
+                        : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                "
+                :disabled="!pagination.next_page_url"
+                @click="loadEducation(pagination.next_page_url)"
+            >
+                Next <ChevronRight class="w-4 h-4" />
+            </button>
+        </div>
+
+        <Transition
+            enter-active-class="transition duration-200 ease-out"
+            enter-from-class="opacity-0"
+            enter-to-class="opacity-100"
+            leave-active-class="transition duration-150 ease-in"
+            leave-from-class="opacity-100"
+            leave-to-class="opacity-0"
+        >
+            <div
+                v-if="showModal"
+                class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm"
+            >
+                <div
+                    class="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]"
+                    @click.stop
+                >
+                    <div
+                        class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900"
+                    >
+                        <h2 class="text-xl font-bold text-white">
+                            {{ editMode ? "Edit Education" : "Add Education" }}
+                        </h2>
+                        <button
+                            @click="closeModal"
+                            class="text-slate-400 hover:text-white transition-colors"
+                        >
+                            <X class="w-6 h-6" />
+                        </button>
+                    </div>
+
+                    <div class="p-6 overflow-y-auto custom-scrollbar space-y-5">
+                        <div class="space-y-1.5">
+                            <label
+                                class="text-xs font-semibold text-slate-400 uppercase"
+                                >Degree / Certificate</label
+                            >
+                            <input
+                                v-model="form.degree"
+                                type="text"
+                                placeholder="e.g. BSc in Computer Science"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder:text-slate-600"
+                            />
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-1.5">
+                                <label
+                                    class="text-xs font-semibold text-slate-400 uppercase"
+                                    >Institution</label
+                                >
+                                <div class="relative">
+                                    <School
+                                        class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"
+                                    />
+                                    <input
+                                        v-model="form.institution"
+                                        type="text"
+                                        placeholder="e.g. Harvard"
+                                        class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-slate-200 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder:text-slate-600"
+                                    />
+                                </div>
+                            </div>
+                            <div class="space-y-1.5">
+                                <label
+                                    class="text-xs font-semibold text-slate-400 uppercase"
+                                    >Passing Year / Duration</label
+                                >
+                                <div class="relative">
+                                    <Calendar
+                                        class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"
+                                    />
+
+                                    <input
+                                        v-model="form.duration"
+                                        type="text"
+                                        placeholder="e.g. 2019 - 2023"
+                                        class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-slate-200 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder:text-slate-600"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label
+                                class="text-xs font-semibold text-slate-400 uppercase"
+                                >Description</label
+                            >
+                            <textarea
+                                v-model="form.description"
+                                rows="4"
+                                placeholder="Brief details about major, achievements..."
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder:text-slate-600 custom-scrollbar"
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <div
+                        class="p-6 border-t border-slate-800 bg-slate-900 flex justify-end gap-3"
+                    >
+                        <button
+                            @click="closeModal"
+                            class="px-5 py-2.5 rounded-xl font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            @click="
+                                editMode ? updateEducation() : createEducation()
+                            "
+                            class="px-5 py-2.5 rounded-xl font-medium bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 transition-all"
+                        >
+                            {{ editMode ? "Update" : "Add" }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </Transition>
     </div>
 </template>
 
@@ -156,92 +288,107 @@ import { ref, onMounted } from "vue";
 import { useToast } from "vue-toastification";
 import Swal from "sweetalert2";
 import api from "../services/api";
-
-import Sidebar from "../components/Sidebar.vue";
-import Topbar from "../components/Topbar.vue";
+import {
+    Plus,
+    Search,
+    Edit3,
+    Trash2,
+    X,
+    ChevronLeft,
+    ChevronRight,
+    Calendar,
+    School,
+    GraduationCap,
+} from "lucide-vue-next";
 
 const toast = useToast();
-
 const education = ref([]);
 const pagination = ref({});
 const showModal = ref(false);
 const editMode = ref(false);
 const search = ref("");
+const loading = ref(false);
 
+// ✅ ফিক্স: 'year' এর বদলে 'duration' ব্যবহার করা হয়েছে
 const form = ref({
     id: null,
     degree: "",
     institution: "",
-    year: "",
+    duration: "",
     description: "",
 });
 
-/* Load Education (Search + Pagination) */
+function normalizeUrl(url) {
+    if (typeof url !== "string") return url;
+    try {
+        if (url.startsWith("http")) {
+            const u = new URL(url);
+            return u.pathname + u.search;
+        }
+    } catch (e) {}
+    return url;
+}
+
 const loadEducation = async (url = "/api/admin/education") => {
-    let finalUrl = url;
-
-    if (typeof url !== "string") {
-        finalUrl = "/api/admin/education";
-    } else if (url.startsWith("http")) {
-        const u = new URL(url);
-        finalUrl = u.pathname + u.search;
+    loading.value = true;
+    try {
+        const res = await api.get(normalizeUrl(url), {
+            params: { search: search.value },
+        });
+        education.value = res.data.data ?? res.data;
+        pagination.value = res.data.meta || res.data;
+    } catch (err) {
+        toast.error("Failed to load education");
+    } finally {
+        loading.value = false;
     }
-
-    const res = await api.get(finalUrl, {
-        params: { search: search.value },
-    });
-
-    education.value = res.data.data ?? res.data;
-    pagination.value = res.data;
 };
 
 onMounted(loadEducation);
 
-/* Create Education */
 const createEducation = async () => {
-    await api.post("/api/admin/education", form.value);
-    showModal.value = false;
-    loadEducation();
-    toast.success("Education created!");
+    try {
+        await api.post("/api/admin/education", form.value);
+        showModal.value = false;
+        loadEducation();
+        toast.success("Education created!");
+    } catch (err) {
+        // Error handling
+        if (err.response && err.response.status === 422) {
+            toast.error(Object.values(err.response.data.errors)[0][0]);
+        } else {
+            toast.error("Failed to create!");
+        }
+    }
 };
 
-/* Edit */
-const editEducation = (edu) => {
-    editMode.value = true;
-    showModal.value = true;
-
-    form.value = {
-        id: edu.id,
-        degree: edu.degree,
-        institution: edu.institution,
-        year: edu.year,
-        description: edu.description,
-    };
-};
-
-/* Update */
 const updateEducation = async () => {
-    await api.put(`/api/admin/education/${form.value.id}`, form.value);
-    showModal.value = false;
-    loadEducation();
-    toast.success("Education updated!");
+    try {
+        await api.put(`/api/admin/education/${form.value.id}`, form.value);
+        showModal.value = false;
+        loadEducation();
+        toast.success("Education updated!");
+    } catch (err) {
+        toast.error("Failed to update!");
+    }
 };
 
-/* Delete */
 const confirmDelete = (id) => {
     Swal.fire({
-        title: "Are you sure?",
-        text: "This action cannot be undone!",
+        title: "Delete?",
+        text: "This action cannot be undone.",
         icon: "warning",
+        background: "#1e293b",
+        color: "#fff",
         showCancelButton: true,
-        confirmButtonColor: "#e3342f",
-        cancelButtonColor: "#6c757d",
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonColor: "#ef4444",
+        cancelButtonColor: "#64748b",
+        confirmButtonText: "Yes",
     }).then(async (result) => {
         if (result.isConfirmed) {
             await api.delete(`/api/admin/education/${id}`);
             loadEducation();
-            toast.error("Education deleted!");
+            toast.success("Deleted!");
         }
     });
 };
@@ -249,14 +396,20 @@ const confirmDelete = (id) => {
 const openCreateModal = () => {
     editMode.value = false;
     showModal.value = true;
-
+    // ✅ ফিক্স: 'duration' সেট করা হয়েছে
     form.value = {
         id: null,
         degree: "",
         institution: "",
-        year: "",
+        duration: "",
         description: "",
     };
+};
+
+const editEducation = (edu) => {
+    editMode.value = true;
+    showModal.value = true;
+    form.value = { ...edu };
 };
 
 const closeModal = () => (showModal.value = false);
