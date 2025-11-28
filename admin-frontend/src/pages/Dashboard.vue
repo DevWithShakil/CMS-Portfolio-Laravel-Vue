@@ -53,8 +53,9 @@
         <div
             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10"
         >
-            <div
-                class="group bg-slate-900 border border-slate-800 hover:border-blue-500/50 p-6 rounded-2xl shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden"
+            <router-link
+                to="/admin/projects"
+                class="group bg-slate-900 border border-slate-800 hover:border-blue-500/50 p-6 rounded-2xl shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden cursor-pointer"
             >
                 <div
                     class="absolute right-[-20px] top-[-20px] w-24 h-24 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all"
@@ -80,10 +81,11 @@
                         <Briefcase class="w-6 h-6" />
                     </div>
                 </div>
-            </div>
+            </router-link>
 
-            <div
-                class="group bg-slate-900 border border-slate-800 hover:border-emerald-500/50 p-6 rounded-2xl shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden"
+            <router-link
+                to="/admin/skills"
+                class="group bg-slate-900 border border-slate-800 hover:border-emerald-500/50 p-6 rounded-2xl shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden cursor-pointer"
             >
                 <div
                     class="absolute right-[-20px] top-[-20px] w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all"
@@ -108,10 +110,11 @@
                         <Award class="w-6 h-6" />
                     </div>
                 </div>
-            </div>
+            </router-link>
 
-            <div
-                class="group bg-slate-900 border border-slate-800 hover:border-rose-500/50 p-6 rounded-2xl shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden"
+            <router-link
+                to="/admin/contacts"
+                class="group bg-slate-900 border border-slate-800 hover:border-rose-500/50 p-6 rounded-2xl shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden cursor-pointer"
             >
                 <div
                     class="absolute right-[-20px] top-[-20px] w-24 h-24 bg-rose-500/10 rounded-full blur-2xl group-hover:bg-rose-500/20 transition-all"
@@ -148,10 +151,11 @@
                         ></span>
                     </div>
                 </div>
-            </div>
+            </router-link>
 
-            <div
-                class="group bg-slate-900 border border-slate-800 hover:border-purple-500/50 p-6 rounded-2xl shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden"
+            <router-link
+                to="/admin/blogs"
+                class="group bg-slate-900 border border-slate-800 hover:border-purple-500/50 p-6 rounded-2xl shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden cursor-pointer"
             >
                 <div
                     class="absolute right-[-20px] top-[-20px] w-24 h-24 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition-all"
@@ -177,13 +181,14 @@
                         <FileText class="w-6 h-6" />
                     </div>
                 </div>
-            </div>
+            </router-link>
         </div>
 
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 relative z-10">
             <div class="xl:col-span-2 space-y-8">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <button
+                        @click="router.push('/admin/projects')"
                         class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col items-center justify-center gap-2 hover:bg-slate-800 hover:border-blue-500/30 transition-all group"
                     >
                         <div
@@ -196,7 +201,9 @@
                             >New Project</span
                         >
                     </button>
+
                     <button
+                        @click="router.push('/admin/blogs')"
                         class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col items-center justify-center gap-2 hover:bg-slate-800 hover:border-purple-500/30 transition-all group"
                     >
                         <div
@@ -209,7 +216,9 @@
                             >Write Blog</span
                         >
                     </button>
+
                     <button
+                        @click="router.push('/admin/skills')"
                         class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col items-center justify-center gap-2 hover:bg-slate-800 hover:border-emerald-500/30 transition-all group"
                     >
                         <div
@@ -222,7 +231,9 @@
                             >Add Skill</span
                         >
                     </button>
+
                     <button
+                        @click="router.push('/admin/settings')"
                         class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col items-center justify-center gap-2 hover:bg-slate-800 hover:border-rose-500/30 transition-all group"
                     >
                         <div
@@ -272,7 +283,8 @@
                         <div
                             v-for="c in recentContacts"
                             :key="c.id"
-                            class="p-4 flex items-center gap-4 hover:bg-slate-800/50 transition-colors group"
+                            @click="router.push('/admin/contacts')"
+                            class="p-4 flex items-center gap-4 hover:bg-slate-800/50 transition-colors group cursor-pointer"
                         >
                             <div
                                 class="w-10 h-10 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center text-slate-300 font-bold border border-slate-700"
@@ -309,17 +321,15 @@
                                     class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity translate-x-4 group-hover:translate-x-0 duration-300"
                                 >
                                     <button
+                                        @click.stop="markSeen(c)"
                                         v-if="!c.is_seen"
-                                        @click="markSeen(c)"
                                         class="p-2 bg-slate-800 hover:bg-emerald-500/20 text-slate-400 hover:text-emerald-400 rounded-lg transition-colors"
-                                        title="Mark Seen"
                                     >
                                         <CheckCircle class="w-4 h-4" />
                                     </button>
                                     <button
-                                        @click="deleteContact(c.id)"
+                                        @click.stop="deleteContact(c.id)"
                                         class="p-2 bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 rounded-lg transition-colors"
-                                        title="Delete"
                                     >
                                         <Trash2 class="w-4 h-4" />
                                     </button>
@@ -381,6 +391,7 @@
                     <div
                         v-for="p in latestProjects"
                         :key="p.id"
+                        @click="router.push('/admin/projects')"
                         class="group bg-slate-800/30 hover:bg-slate-800 border border-slate-700/50 hover:border-purple-500/30 rounded-xl p-3 transition-all cursor-pointer"
                     >
                         <div class="flex gap-4">
@@ -391,7 +402,6 @@
                                     v-if="p.thumbnail"
                                     :src="p.thumbnail"
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                    alt="Project"
                                 />
                                 <div
                                     v-else
@@ -445,11 +455,11 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router"; // Router import করুন
 import { useToast } from "vue-toastification";
 import Swal from "sweetalert2";
 import api from "../services/api";
 
-// Import Icons
 import {
     Briefcase,
     Award,
@@ -469,9 +479,9 @@ import {
     User,
 } from "lucide-vue-next";
 
+const router = useRouter(); // Router init
 const toast = useToast();
 
-// State
 const stats = ref({
     projects: 0,
     skills: 0,
@@ -485,7 +495,6 @@ const latestProjects = ref([]);
 const contactsLoading = ref(false);
 const projectsLoading = ref(false);
 
-// Helper for URLs
 function normalizeUrl(url) {
     if (typeof url !== "string") return url;
     try {
@@ -493,13 +502,10 @@ function normalizeUrl(url) {
             const u = new URL(url);
             return u.pathname + u.search;
         }
-    } catch (e) {
-        /* ignore */
-    }
+    } catch (e) {}
     return url;
 }
 
-// 1. Load Stats
 const loadStats = async () => {
     try {
         const [pr, sk, ex, co, bl] = await Promise.all([
@@ -536,7 +542,6 @@ const loadStats = async () => {
     }
 };
 
-// 2. Load Recent Contacts
 const loadRecentContacts = async () => {
     contactsLoading.value = true;
     try {
@@ -544,15 +549,7 @@ const loadRecentContacts = async () => {
             params: { per_page: 5 },
         });
         const data = Array.isArray(res.data) ? res.data : res.data?.data ?? [];
-
-        recentContacts.value = data
-            .slice()
-            .sort((a, b) => {
-                if (a.created_at && b.created_at)
-                    return new Date(b.created_at) - new Date(a.created_at);
-                return b.id - a.id;
-            })
-            .slice(0, 5);
+        recentContacts.value = data.slice(0, 5);
     } catch (err) {
         toast.error("Failed to load messages");
     } finally {
@@ -560,7 +557,6 @@ const loadRecentContacts = async () => {
     }
 };
 
-// 3. Load Latest Projects
 const loadLatestProjects = async () => {
     projectsLoading.value = true;
     try {
@@ -568,15 +564,7 @@ const loadLatestProjects = async () => {
             params: { per_page: 5 },
         });
         const data = Array.isArray(res.data) ? res.data : res.data?.data ?? [];
-
-        latestProjects.value = data
-            .slice()
-            .sort((a, b) => {
-                if (a.created_at && b.created_at)
-                    return new Date(b.created_at) - new Date(a.created_at);
-                return b.id - a.id;
-            })
-            .slice(0, 5);
+        latestProjects.value = data.slice(0, 5);
     } catch (err) {
         toast.error("Failed to load projects");
     } finally {
@@ -584,7 +572,6 @@ const loadLatestProjects = async () => {
     }
 };
 
-// Actions
 const markSeen = async (contact) => {
     const originalState = contact.is_seen;
     contact.is_seen = true;
