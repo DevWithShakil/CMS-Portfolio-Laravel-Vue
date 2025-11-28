@@ -2,9 +2,12 @@
     <div
         class="flex h-screen bg-slate-950 text-slate-200 font-sans overflow-hidden selection:bg-blue-500/30"
     >
-        <Sidebar />
+        <Sidebar :isOpen="isSidebarOpen" @toggleSidebar="toggleSidebar" />
 
-        <div class="flex-1 flex flex-col ml-72 transition-all duration-300">
+        <div
+            class="flex-1 flex flex-col transition-all duration-300 ease-in-out"
+            :class="isSidebarOpen ? 'ml-72' : 'ml-20'"
+        >
             <Topbar />
 
             <main
@@ -28,27 +31,32 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import Sidebar from "../Sidebar.vue";
 import Topbar from "../Topbar.vue";
+
+// সাইডবার ডিফল্টভাবে ওপেন থাকবে
+const isSidebarOpen = ref(true);
+
+const toggleSidebar = () => {
+    isSidebarOpen.value = !isSidebarOpen.value;
+};
 </script>
 
 <style>
-/* Global Dark Scrollbar Styles for the Main Layout */
+/* Global Scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
-
 .custom-scrollbar::-webkit-scrollbar-track {
-    background: #0f172a; /* slate-900 */
+    background: #0f172a;
 }
-
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #334155; /* slate-700 */
+    background: #334155;
     border-radius: 10px;
 }
-
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #475569; /* slate-600 */
+    background: #475569;
 }
 </style>
