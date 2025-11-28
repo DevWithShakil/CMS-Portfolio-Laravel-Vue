@@ -13,7 +13,7 @@ import Education from '../pages/Education.vue'
 import Contacts from '../pages/Contacts.vue'
 import Settings from '../pages/Settings.vue'
 import Blogs from '../pages/Blogs.vue'
-import Profile from '../pages/Profile.vue';
+import Profile from '../pages/Profile.vue'
 
 const routes = [
     /**
@@ -22,34 +22,76 @@ const routes = [
     {
         path: '/',
         name: 'login',
-        component: Login
+        component: Login,
+        meta: { title: 'Login' }
     },
 
     /**
      * Admin Protected Routes
-     * All children will use the AdminLayout (Sidebar + Topbar)
      */
     {
         path: '/admin',
         component: AdminLayout,
         meta: { requiresAuth: true },
         children: [
-            { path: 'dashboard', name: 'dashboard', component: Dashboard },
-            { path: 'projects', name: 'projects', component: Projects },
-            { path: 'skills', name: 'skills', component: Skills },
-            { path: 'experience', name: 'experience', component: Experience },
-            { path: 'education', name: 'education', component: Education },
-            { path: 'contacts', name: 'contacts', component: Contacts },
-            { path: 'settings', name: 'settings', component: Settings },
-            { path: 'blogs', name: 'blogs', component: Blogs },
-            { path: 'profile', name: 'profile', component: Profile },
+            {
+                path: 'dashboard',
+                name: 'dashboard',
+                component: Dashboard,
+                meta: { title: 'Dashboard' }
+            },
+            {
+                path: 'projects',
+                name: 'projects',
+                component: Projects,
+                meta: { title: 'Projects' }
+            },
+            {
+                path: 'skills',
+                name: 'skills',
+                component: Skills,
+                meta: { title: 'Skills' }
+            },
+            {
+                path: 'experience',
+                name: 'experience',
+                component: Experience,
+                meta: { title: 'Experience' }
+            },
+            {
+                path: 'education',
+                name: 'education',
+                component: Education,
+                meta: { title: 'Education' }
+            },
+            {
+                path: 'contacts',
+                name: 'contacts',
+                component: Contacts,
+                meta: { title: 'Inbox' }
+            },
+            {
+                path: 'settings',
+                name: 'settings',
+                component: Settings,
+                meta: { title: 'Settings' }
+            },
+            {
+                path: 'blogs',
+                name: 'blogs',
+                component: Blogs,
+                meta: { title: 'Blogs' }
+            },
+            {
+                path: 'profile',
+                name: 'profile',
+                component: Profile,
+                meta: { title: 'My Profile' }
+            },
         ]
     },
 
-    /**
-     * Catch-all route for 404 (Optional)
-     * Redirect unknown paths to login or dashboard
-     */
+    // 404 Route
     {
         path: '/:pathMatch(.*)*',
         redirect: '/'
@@ -61,18 +103,19 @@ const router = createRouter({
     routes
 })
 
-// Navigation Guard
+// --- Navigation Guard & Title Update ---
 router.beforeEach((to, from, next) => {
+    const defaultTitle = 'Admin Panel';
+    document.title = to.meta.title ? `${to.meta.title} | ${defaultTitle}` : defaultTitle;
+
+    // 2. Auth Logic
     const loggedIn = localStorage.getItem("token")
 
     if (to.meta.requiresAuth && !loggedIn) {
-        // If route requires auth and user is NOT logged in -> Redirect to Login
         next('/')
     } else if (to.path === '/' && loggedIn) {
-        // If user is ALREADY logged in and tries to visit Login -> Redirect to Dashboard
         next('/admin/dashboard')
     } else {
-        // Proceed as normal
         next()
     }
 })

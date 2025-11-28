@@ -18,8 +18,11 @@
                 >
                     Dashboard Overview
                 </h1>
+
                 <p class="text-slate-400">
-                    Welcome back, Admin! You have
+                    Welcome back,
+                    <span class="text-white font-bold">{{ adminName }}</span
+                    >! You have
                     <span class="text-white font-semibold"
                         >{{ stats.unreadContacts }} new messages</span
                     >
@@ -436,7 +439,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import Swal from "sweetalert2";
@@ -472,6 +475,9 @@ const stats = ref({
     publishedBlogs: 0,
 });
 
+// ✅ Dynamic Admin Name
+const adminName = ref("Admin");
+
 const recentContacts = ref([]);
 const latestProjects = ref([]);
 const contactsLoading = ref(false);
@@ -488,12 +494,12 @@ function normalizeUrl(url) {
     return url;
 }
 
-// ✅ Image URL Helper Function
 const getThumbnailUrl = (path) => {
     if (!path) return null;
     return path.startsWith("http") ? path : `http://127.0.0.1:8000${path}`;
 };
 
+// 1. Load Stats
 const loadStats = async () => {
     try {
         const [pr, sk, ex, co, bl] = await Promise.all([
@@ -530,6 +536,11 @@ const loadStats = async () => {
     }
 };
 
+// ✅ 2. Load Admin Name Logic
+const loadAdminName = () => {
+    adminName.value = localStorage.getItem("admin_name") || "Admin";
+};
+
 const loadRecentContacts = async () => {
     contactsLoading.value = true;
     try {
@@ -560,6 +571,7 @@ const loadLatestProjects = async () => {
     }
 };
 
+// ... (Actions like markSeen, deleteContact remain the same) ...
 const markSeen = async (contact) => {
     const originalState = contact.is_seen;
     contact.is_seen = true;
@@ -606,5 +618,13 @@ onMounted(() => {
     loadStats();
     loadRecentContacts();
     loadLatestProjects();
+    loadAdminName(); // Load name initially
+
+    // Listen for name changes
+    window.addEventListener("profile-updated", loadAdminName);
+});
+
+onUnmounted(() => {
+    window.removeEventListener("profile-updated", loadAdminName);
 });
 </script>

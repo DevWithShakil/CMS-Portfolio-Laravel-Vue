@@ -5,6 +5,7 @@
         <div class="flex items-center justify-between h-20 px-6">
             <div class="flex items-center gap-4">
                 <button
+                    @click="emitToggle"
                     class="lg:hidden p-2 text-slate-400 hover:text-white transition-colors"
                 >
                     <Menu class="w-6 h-6" />
@@ -15,10 +16,14 @@
                     >
                         {{ currentRouteName }}
                     </h1>
+
                     <p
                         class="text-xs text-slate-500 hidden sm:block font-medium"
                     >
-                        Welcome back, Admin
+                        Welcome back,
+                        <span class="text-slate-300 font-bold">{{
+                            userName
+                        }}</span>
                     </p>
                 </div>
             </div>
@@ -68,12 +73,11 @@
                         <div class="hidden md:flex flex-col items-start pr-2">
                             <span
                                 class="text-sm font-bold text-slate-200 leading-none group-hover:text-white"
+                                >{{ userName }}</span
                             >
-                                {{ userName }}
-                            </span>
                             <span
                                 class="text-[10px] text-slate-500 font-medium mt-1"
-                                >Super Admin</span
+                                >Admin</span
                             >
                         </div>
 
@@ -92,7 +96,7 @@
                     >
                         <div
                             v-if="isDropdownOpen"
-                            class="absolute right-0 mt-3 w-60 bg-slate-900 rounded-xl shadow-2xl border border-slate-800 py-2 origin-top-right z-50"
+                            class="absolute right-0 mt-3 w-72 bg-slate-900 rounded-xl shadow-2xl border border-slate-800 py-2 origin-top-right z-50"
                         >
                             <div
                                 class="px-5 py-3 border-b border-slate-800 mb-2"
@@ -102,10 +106,12 @@
                                 >
                                     Signed in as
                                 </p>
+
                                 <p
-                                    class="text-sm font-bold text-white truncate mt-1"
+                                    class="text-sm font-bold text-white mt-1 cursor-help truncate hover:text-clip hover:whitespace-normal break-all"
+                                    :title="userEmail"
                                 >
-                                    admin@example.com
+                                    {{ userEmail }}
                                 </p>
                             </div>
 
@@ -157,7 +163,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, defineEmits } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import api from "../services/api";
 import { useToast } from "vue-toastification";
@@ -171,13 +177,21 @@ import {
     Settings,
 } from "lucide-vue-next";
 
+// Emits for Mobile Menu Toggle
+const emit = defineEmits(["toggleSidebar"]);
+const emitToggle = () => emit("toggleSidebar");
+
 const toast = useToast();
 const router = useRouter();
 const route = useRoute();
 
 const isDropdownOpen = ref(false);
 const dropdownRef = ref(null);
+
+// State Variables
 const userAvatar = ref(null);
+const userName = ref("Admin");
+const userEmail = ref("admin@example.com");
 
 const currentRouteName = computed(() =>
     route.name ? route.name.toString().replace("-", " ") : "Dashboard"
@@ -191,68 +205,82 @@ const closeDropdown = (e) => {
     }
 };
 
-const userName = ref("Admin");
-const userRole = ref("Super Admin");
+/* --------------------------------------
+   Data Loading Logic
+-------------------------------------- */
 
-const loadUserInfo = () => {
-    const storedName = localStorage.getItem("admin_name");
-    if (storedName) {
-        userName.value = storedName;
-    } else {
-        fetchProfileData();
-    }
-};
-
-const fetchProfileData = async () => {
-    try {
-        const res = await api.get("/api/admin/profile");
-        userName.value = res.data.name;
-        localStorage.setItem("admin_name", res.data.name);
-    } catch (e) {}
-};
-
-onMounted(() => {
-    loadUserAvatar();
-    loadUserInfo();
-
-    window.addEventListener("profile-updated", loadUserInfo);
-});
-
-onUnmounted(() => {
-    document.removeEventListener("click", closeDropdown);
-    window.removeEventListener("profile-updated", loadUserInfo);
-});
-
-// ✅ Load Profile Image from Settings API
+// 1. Load Avatar from Settings
 const loadUserAvatar = async () => {
     try {
         const res = await api.get("/api/admin/settings");
         const data = Array.isArray(res.data)
             ? res.data[0]
             : res.data.data || res.data;
-
         if (data && data.profile_image) {
-            // Fix URL Path
             const path = data.profile_image;
             userAvatar.value = path.startsWith("http")
                 ? path
                 : `http://127.0.0.1:8000${path}`;
         }
-    } catch (e) {
-        console.error("Avatar load failed", e);
-    }
+    } catch (e) {}
 };
 
+// 2. Load Name & Email from LocalStorage
+const updateUserInfo = () => {
+    userName.value = localStorage.getItem("admin_name") || "Admin";
+    userEmail.value =
+        localStorage.getItem("admin_email") || "admin@example.com";
+};
+
+// Lifecycle
 onMounted(() => {
     document.addEventListener("click", closeDropdown);
-    loadUserAvatar(); // Fetch image on mount
+
+    loadUserAvatar();
+    updateUserInfo();
+
+    // Listen for updates from Profile Page
+    window.addEventListener("profile-updated", () => {
+        updateUserInfo();
+        loadUserAvatar();
+    });
 });
 
-onUnmounted(() => document.removeEventListener("click", closeDropdown));
+onUnmounted(() => {
+    document.removeEventListener("click", closeDropdown);
+    window.removeEventListener("profile-updated", updateUserInfo);
+});
 
+// Logout
 const logout = async () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("admin_name");
+    localStorage.removeItem("admin_email");
     router.push("/");
-    toast.success("Logged out successfully");
+    toast.success("See you again soon!", { timeout: 2000 });
 };
 </script>
+
+<style scoped>
+@keyframes swing {
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+    20% {
+        transform: rotate(15deg);
+    }
+    40% {
+        transform: rotate(-10deg);
+    }
+    60% {
+        transform: rotate(5deg);
+    }
+    80% {
+        transform: rotate(-5deg);
+    }
+}
+.animate-swing {
+    animation: swing 0.5s ease-in-out;
+}
+</style>

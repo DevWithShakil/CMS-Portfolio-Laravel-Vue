@@ -100,11 +100,8 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import api from "../services/api";
-
-// Icons
 import { Mail, Lock, LockKeyhole, Eye, EyeOff, Loader2 } from "lucide-vue-next";
 
-// Logic Setup
 const router = useRouter();
 const toast = useToast();
 
@@ -114,7 +111,6 @@ const showPassword = ref(false);
 const isLoading = ref(false);
 
 const handleLogin = async () => {
-    // Basic client-side validation
     if (!email.value || !password.value) {
         toast.warning("Please enter both email and password.");
         return;
@@ -123,32 +119,37 @@ const handleLogin = async () => {
     isLoading.value = true;
 
     try {
-        // API Call
         const res = await api.post("/api/login", {
             email: email.value,
             password: password.value,
         });
 
-        // Handle Token structure (adjust based on your actual API response)
-        // Sometimes it's res.data.token, sometimes res.data.data.token
-        const token = res.data.data?.token || res.data.token;
+        // Extract Token & User
+        const token = res.data.token || res.data.data?.token;
+        const user = res.data.user || res.data.data?.user; // ⚠️ Check API response structure
 
         if (token) {
             localStorage.setItem("token", token);
 
+            // ✅ Save User Info for Sidebar/Topbar
+            if (user) {
+                localStorage.setItem("admin_name", user.name);
+                localStorage.setItem("admin_email", user.email);
+            } else {
+                // Fallback (If API doesn't return user object immediately)
+                // You can fetch profile here or just set email from input
+                localStorage.setItem("admin_email", email.value);
+            }
+
             toast.success("Login successful! Redirecting...", {
                 timeout: 2000,
             });
-
-            // Redirect to the correct Admin Dashboard path
             router.push("/admin/dashboard");
         } else {
             throw new Error("Token missing in response");
         }
     } catch (err) {
         console.error("Login Error:", err);
-
-        // Display error message from backend if available
         const msg = err.response?.data?.message || "Invalid email or password.";
         toast.error(msg);
     } finally {

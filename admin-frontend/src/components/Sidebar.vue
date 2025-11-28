@@ -13,23 +13,27 @@
                 <div
                     class="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/20 shrink-0"
                 >
-                    A
+                    {{ siteName.charAt(0).toUpperCase() || "A" }}
                 </div>
-                <h2
-                    class="text-xl font-bold text-white tracking-wide whitespace-nowrap"
-                >
-                    Admin<span
-                        class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400"
-                        >Panel</span
+
+                <div class="flex flex-col overflow-hidden">
+                    <h2
+                        class="text-sm font-bold text-white tracking-wide whitespace-nowrap truncate max-w-[140px]"
                     >
-                </h2>
+                        {{ siteName || "Admin Panel" }}
+                    </h2>
+                    <span
+                        class="text-[10px] text-blue-400 font-medium tracking-wider uppercase"
+                        >Control Panel</span
+                    >
+                </div>
             </div>
 
             <div v-else class="w-full flex justify-center">
                 <div
                     class="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold shrink-0"
                 >
-                    A
+                    {{ siteName.charAt(0).toUpperCase() || "A" }}
                 </div>
             </div>
 
@@ -140,7 +144,7 @@
 <script setup>
 import { defineProps, defineEmits, ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
-import api from "../services/api"; // Ensure API service is imported
+import api from "../services/api";
 import {
     LayoutDashboard,
     Briefcase,
@@ -162,11 +166,12 @@ const emitToggle = () => emit("toggleSidebar");
 const router = useRouter();
 
 // State Variables
+const siteName = ref("Portfolio"); // Default Title
 const userAvatar = ref(null);
 const userName = ref("Admin");
 const userEmail = ref("admin@example.com");
 
-// Menu
+// Menu Items
 const menuItems = [
     { name: "Dashboard", path: "/admin/dashboard", icon: LayoutDashboard },
     { name: "Projects", path: "/admin/projects", icon: Briefcase },
@@ -179,46 +184,55 @@ const menuItems = [
 ];
 
 /* --------------------------------------
-   logic to load Avatar & Info
+   Data Loading Logic
 -------------------------------------- */
 
-// 1. Fetch Avatar from Settings API
-const loadUserAvatar = async () => {
+// 1. Load Site Branding & Avatar from Settings
+const loadSettings = async () => {
     try {
         const res = await api.get("/api/admin/settings");
         const data = Array.isArray(res.data)
             ? res.data[0]
             : res.data.data || res.data;
 
-        if (data && data.profile_image) {
-            const path = data.profile_image;
-            userAvatar.value = path.startsWith("http")
-                ? path
-                : `http://127.0.0.1:8000${path}`;
+        if (data) {
+            // Site Title (e.g. Shakil Portfolio)
+            if (data.site_title) siteName.value = data.site_title;
+
+            // Profile Image
+            if (data.profile_image) {
+                const path = data.profile_image;
+                userAvatar.value = path.startsWith("http")
+                    ? path
+                    : `http://127.0.0.1:8000${path}`;
+            }
         }
     } catch (e) {
-        console.error("Avatar load error", e);
+        console.error("Settings load error", e);
     }
 };
 
-// 2. Fetch Name/Email from LocalStorage (Updated by Profile Page)
-const updateSidebarInfo = () => {
+// 2. Load User Info from LocalStorage (Sync with Profile Page)
+const updateUserInfo = () => {
     userName.value = localStorage.getItem("admin_name") || "Admin";
     userEmail.value =
         localStorage.getItem("admin_email") || "admin@example.com";
 };
 
-// Lifecycle Hooks
+// Lifecycle
 onMounted(() => {
-    loadUserAvatar();
-    updateSidebarInfo();
+    loadSettings();
+    updateUserInfo();
 
-    // Listen for updates from Profile page
-    window.addEventListener("profile-updated", updateSidebarInfo);
+    // Listen for updates from other pages
+    window.addEventListener("profile-updated", () => {
+        updateUserInfo();
+        loadSettings(); // Reload if site title changed
+    });
 });
 
 onUnmounted(() => {
-    window.removeEventListener("profile-updated", updateSidebarInfo);
+    window.removeEventListener("profile-updated", updateUserInfo);
 });
 
 // Logout
