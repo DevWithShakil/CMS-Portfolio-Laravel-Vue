@@ -1,4 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
+// Import Layouts
+import AdminLayout from '@/components/layouts/AdminLayout.vue'
+
+// Import Pages
 import Login from '../pages/Login.vue'
 import Dashboard from '../pages/Dashboard.vue'
 import Projects from '../pages/Projects.vue'
@@ -10,61 +15,44 @@ import Settings from '../pages/Settings.vue'
 import Blogs from '../pages/Blogs.vue'
 
 const routes = [
-    { path: '/', name: 'login', component: Login },
+    /**
+     * Public Routes
+     */
     {
-        path: '/dashboard',
-        name: 'dashboard',
-        component: Dashboard,
-        meta: { requiresAuth: true }
-    },
-    {
-        path: '/projects',
-        name: 'projects',
-        component: Projects,
-        meta: { requiresAuth: true }
+        path: '/',
+        name: 'login',
+        component: Login
     },
 
+    /**
+     * Admin Protected Routes
+     * All children will use the AdminLayout (Sidebar + Topbar)
+     */
     {
-        path: "/skills",
-        name: "skills",
-        component: Skills,
-        meta: { requiresAuth: true }
+        path: '/admin',
+        component: AdminLayout,
+        meta: { requiresAuth: true },
+        children: [
+            { path: 'dashboard', name: 'dashboard', component: Dashboard },
+            { path: 'projects', name: 'projects', component: Projects },
+            { path: 'skills', name: 'skills', component: Skills },
+            { path: 'experience', name: 'experience', component: Experience },
+            { path: 'education', name: 'education', component: Education },
+            { path: 'contacts', name: 'contacts', component: Contacts },
+            { path: 'settings', name: 'settings', component: Settings },
+            { path: 'blogs', name: 'blogs', component: Blogs },
+        ]
     },
 
+    /**
+     * Catch-all route for 404 (Optional)
+     * Redirect unknown paths to login or dashboard
+     */
     {
-        path: "/experience",
-        name: "experience",
-        component: Experience,
-        meta: { requiresAuth: true }
-    },
-    {
-        path: "/education",
-        name: "education",
-        component: Education,
-        meta: { requiresAuth: true }
-    },
-    {
-        path: "/contacts",
-        name: "contacts",
-        component: Contacts,
-        meta: { requiresAuth: true }
-    },
-    {
-        path: "/settings",
-        name: "settings",
-        component: Settings,
-        meta: { requiresAuth: true }
-    },
-    {
-        path: "/blogs",
-        name: "blogs",
-        component: Blogs,
-        meta: { requiresAuth: true }
-    },
-
+        path: '/:pathMatch(.*)*',
+        redirect: '/'
+    }
 ]
-
-
 
 const router = createRouter({
     history: createWebHistory(),
@@ -76,8 +64,13 @@ router.beforeEach((to, from, next) => {
     const loggedIn = localStorage.getItem("token")
 
     if (to.meta.requiresAuth && !loggedIn) {
+        // If route requires auth and user is NOT logged in -> Redirect to Login
         next('/')
+    } else if (to.path === '/' && loggedIn) {
+        // If user is ALREADY logged in and tries to visit Login -> Redirect to Dashboard
+        next('/admin/dashboard')
     } else {
+        // Proceed as normal
         next()
     }
 })

@@ -1,233 +1,328 @@
 <template>
-    <div class="flex">
-        <Sidebar />
-
-        <div class="flex-1 ml-64">
-            <Topbar />
-
-            <div class="p-6">
-                <!-- Header -->
-                <div class="flex items-center justify-between mb-6">
-                    <div>
-                        <h1 class="text-3xl font-bold">Dashboard</h1>
-                        <p class="text-gray-600 mt-1">
-                            Welcome back — here’s a quick overview.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Stats Cards -->
-                <div
-                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6"
+    <div class="space-y-6">
+        <div
+            class="flex flex-col md:flex-row md:items-center justify-between gap-4"
+        >
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800 tracking-tight">
+                    Dashboard Overview
+                </h1>
+                <p class="text-sm text-slate-500 mt-1">
+                    Welcome back! Here's what's happening with your portfolio
+                    today.
+                </p>
+            </div>
+            <div class="flex items-center gap-2">
+                <span
+                    class="text-xs font-medium text-slate-500 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm"
                 >
-                    <div
-                        class="bg-white p-4 rounded shadow-sm flex items-center"
-                    >
-                        <div class="flex-1">
-                            <div class="text-sm text-gray-500">Projects</div>
-                            <div class="text-2xl font-semibold">
-                                {{ stats.projects }}
-                            </div>
-                        </div>
-                        <div class="text-blue-600 text-3xl">📁</div>
-                    </div>
+                    {{
+                        new Date().toLocaleDateString("en-US", {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                        })
+                    }}
+                </span>
+            </div>
+        </div>
 
-                    <div
-                        class="bg-white p-4 rounded shadow-sm flex items-center"
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div
+                class="bg-white p-5 rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-100 flex items-center justify-between transition-transform hover:-translate-y-1"
+            >
+                <div>
+                    <p
+                        class="text-xs font-semibold text-slate-400 uppercase tracking-wider"
                     >
-                        <div class="flex-1">
-                            <div class="text-sm text-gray-500">Skills</div>
-                            <div class="text-2xl font-semibold">
-                                {{ stats.skills }}
-                            </div>
-                        </div>
-                        <div class="text-yellow-500 text-3xl">🧰</div>
-                    </div>
+                        Total Projects
+                    </p>
+                    <h3 class="text-2xl font-bold text-slate-800 mt-1">
+                        {{ stats.projects }}
+                    </h3>
+                </div>
+                <div
+                    class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600"
+                >
+                    <Briefcase class="w-6 h-6" />
+                </div>
+            </div>
 
-                    <div
-                        class="bg-white p-4 rounded shadow-sm flex items-center"
+            <div
+                class="bg-white p-5 rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-100 flex items-center justify-between transition-transform hover:-translate-y-1"
+            >
+                <div>
+                    <p
+                        class="text-xs font-semibold text-slate-400 uppercase tracking-wider"
                     >
-                        <div class="flex-1">
-                            <div class="text-sm text-gray-500">Experiences</div>
-                            <div class="text-2xl font-semibold">
-                                {{ stats.experiences }}
-                            </div>
-                        </div>
-                        <div class="text-green-500 text-3xl">💼</div>
-                    </div>
+                        Total Skills
+                    </p>
+                    <h3 class="text-2xl font-bold text-slate-800 mt-1">
+                        {{ stats.skills }}
+                    </h3>
+                </div>
+                <div
+                    class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600"
+                >
+                    <Award class="w-6 h-6" />
+                </div>
+            </div>
 
-                    <div
-                        class="bg-white p-4 rounded shadow-sm flex items-center"
+            <div
+                class="bg-white p-5 rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-100 flex items-center justify-between transition-transform hover:-translate-y-1 relative overflow-hidden"
+            >
+                <div>
+                    <p
+                        class="text-xs font-semibold text-slate-400 uppercase tracking-wider"
                     >
-                        <div class="flex-1">
-                            <div class="text-sm text-gray-500">
-                                Unread Messages
-                            </div>
-                            <div class="text-2xl font-semibold">
-                                {{ stats.unreadContacts }}
-                            </div>
-                        </div>
-                        <div class="text-red-500 text-3xl">✉️</div>
-                    </div>
+                        Unread Messages
+                    </p>
+                    <h3 class="text-2xl font-bold text-slate-800 mt-1">
+                        {{ stats.unreadContacts }}
+                    </h3>
+                </div>
+                <div
+                    class="w-12 h-12 rounded-xl bg-rose-50 flex items-center justify-center text-rose-600"
+                >
+                    <Mail class="w-6 h-6" />
+                </div>
+                <span
+                    v-if="stats.unreadContacts > 0"
+                    class="absolute top-4 right-4 w-2 h-2 rounded-full bg-rose-500 animate-pulse"
+                ></span>
+            </div>
 
-                    <div
-                        class="bg-white p-4 rounded shadow-sm flex items-center"
+            <div
+                class="bg-white p-5 rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-100 flex items-center justify-between transition-transform hover:-translate-y-1"
+            >
+                <div>
+                    <p
+                        class="text-xs font-semibold text-slate-400 uppercase tracking-wider"
                     >
-                        <div class="flex-1">
-                            <div class="text-sm text-gray-500">
-                                Published Blogs
-                            </div>
-                            <div class="text-2xl font-semibold">
-                                {{ stats.publishedBlogs }}
-                            </div>
+                        Published Blogs
+                    </p>
+                    <h3 class="text-2xl font-bold text-slate-800 mt-1">
+                        {{ stats.publishedBlogs }}
+                    </h3>
+                </div>
+                <div
+                    class="w-12 h-12 rounded-xl bg-violet-50 flex items-center justify-center text-violet-600"
+                >
+                    <FileText class="w-6 h-6" />
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <div
+                class="xl:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col"
+            >
+                <div
+                    class="p-5 border-b border-slate-100 flex items-center justify-between"
+                >
+                    <h2
+                        class="font-bold text-slate-800 flex items-center gap-2"
+                    >
+                        <MessageSquare class="w-4 h-4 text-blue-500" /> Recent
+                        Messages
+                    </h2>
+                    <button
+                        @click="loadRecentContacts"
+                        class="p-2 hover:bg-slate-50 rounded-lg text-slate-400 hover:text-blue-600 transition-colors"
+                    >
+                        <RefreshCw
+                            class="w-4 h-4"
+                            :class="{ 'animate-spin': contactsLoading }"
+                        />
+                    </button>
+                </div>
+
+                <div v-if="contactsLoading" class="p-5 space-y-4">
+                    <div
+                        v-for="i in 3"
+                        :key="i"
+                        class="h-16 bg-slate-50 rounded-lg animate-pulse w-full"
+                    ></div>
+                </div>
+
+                <div v-else class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr
+                                class="text-xs font-semibold text-slate-400 uppercase bg-slate-50/50 border-b border-slate-100"
+                            >
+                                <th class="px-5 py-3">User</th>
+                                <th class="px-5 py-3">Subject</th>
+                                <th class="px-5 py-3">Status</th>
+                                <th class="px-5 py-3 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr
+                                v-for="c in recentContacts"
+                                :key="c.id"
+                                class="hover:bg-slate-50/80 transition-colors group"
+                            >
+                                <td class="px-5 py-3">
+                                    <div
+                                        class="font-medium text-slate-800 text-sm"
+                                    >
+                                        {{ c.name }}
+                                    </div>
+                                    <div class="text-xs text-slate-400">
+                                        {{
+                                            new Date(
+                                                c.created_at
+                                            ).toLocaleDateString()
+                                        }}
+                                    </div>
+                                </td>
+                                <td
+                                    class="px-5 py-3 text-sm text-slate-600 truncate max-w-[150px]"
+                                >
+                                    {{ c.subject }}
+                                </td>
+                                <td class="px-5 py-3">
+                                    <span
+                                        v-if="c.is_seen"
+                                        class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600"
+                                    >
+                                        Seen
+                                    </span>
+                                    <span
+                                        v-else
+                                        class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-600 border border-blue-100"
+                                    >
+                                        New
+                                    </span>
+                                </td>
+                                <td class="px-5 py-3 text-right">
+                                    <div
+                                        class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        <button
+                                            v-if="!c.is_seen"
+                                            @click="markSeen(c)"
+                                            title="Mark as Read"
+                                            class="p-1.5 text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100"
+                                        >
+                                            <CheckCircle class="w-4 h-4" />
+                                        </button>
+                                        <button
+                                            @click="deleteContact(c.id)"
+                                            title="Delete"
+                                            class="p-1.5 text-red-600 bg-red-50 rounded-md hover:bg-red-100"
+                                        >
+                                            <Trash2 class="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr v-if="recentContacts.length === 0">
+                                <td
+                                    colspan="4"
+                                    class="px-5 py-8 text-center text-slate-400 text-sm"
+                                >
+                                    No new messages found.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div
+                class="bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col h-full"
+            >
+                <div
+                    class="p-5 border-b border-slate-100 flex items-center justify-between"
+                >
+                    <h2
+                        class="font-bold text-slate-800 flex items-center gap-2"
+                    >
+                        <Layers class="w-4 h-4 text-purple-500" /> Latest
+                        Projects
+                    </h2>
+                    <button
+                        @click="loadLatestProjects"
+                        class="p-2 hover:bg-slate-50 rounded-lg text-slate-400 hover:text-blue-600 transition-colors"
+                    >
+                        <RefreshCw
+                            class="w-4 h-4"
+                            :class="{ 'animate-spin': projectsLoading }"
+                        />
+                    </button>
+                </div>
+
+                <div v-if="projectsLoading" class="p-5 space-y-4">
+                    <div v-for="i in 4" :key="i" class="flex gap-3">
+                        <div
+                            class="w-12 h-12 bg-slate-100 rounded-lg animate-pulse"
+                        ></div>
+                        <div class="flex-1 space-y-2">
+                            <div
+                                class="h-4 bg-slate-100 rounded w-3/4 animate-pulse"
+                            ></div>
+                            <div
+                                class="h-3 bg-slate-100 rounded w-1/2 animate-pulse"
+                            ></div>
                         </div>
-                        <div class="text-purple-500 text-3xl">📰</div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Recent messages -->
-                    <div class="lg:col-span-2 bg-white rounded shadow-sm p-4">
-                        <div class="flex items-center justify-between mb-3">
-                            <h2 class="text-xl font-semibold">
-                                Recent Messages
-                            </h2>
-                            <button
-                                @click="loadRecentContacts"
-                                class="text-sm text-blue-600 hover:underline"
-                            >
-                                Refresh
-                            </button>
-                        </div>
-
+                <div v-else class="p-5 space-y-4">
+                    <div
+                        v-for="p in latestProjects"
+                        :key="p.id"
+                        class="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-100 transition-all cursor-pointer"
+                    >
                         <div
-                            v-if="contactsLoading"
-                            class="py-8 text-center text-gray-500"
+                            class="w-12 h-12 shrink-0 rounded-lg bg-slate-100 overflow-hidden border border-slate-200"
                         >
-                            Loading...
-                        </div>
-
-                        <div v-else>
-                            <table class="w-full text-left">
-                                <thead>
-                                    <tr class="text-sm text-gray-600">
-                                        <th class="p-2">Name</th>
-                                        <th class="p-2">Subject</th>
-                                        <th class="p-2">Message</th>
-                                        <th class="p-2">Seen</th>
-                                        <th class="p-2">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr
-                                        v-for="c in recentContacts"
-                                        :key="c.id"
-                                        class="border-t"
-                                    >
-                                        <td class="p-2">{{ c.name }}</td>
-                                        <td class="p-2">{{ c.subject }}</td>
-                                        <td class="p-2 max-w-xs truncate">
-                                            {{ c.message }}
-                                        </td>
-                                        <td class="p-2">
-                                            <span
-                                                v-if="c.is_seen"
-                                                class="px-2 py-1 rounded bg-gray-100 text-sm text-gray-700"
-                                            >
-                                                Seen
-                                            </span>
-                                            <span
-                                                v-else
-                                                class="px-2 py-1 rounded bg-red-100 text-sm text-red-700"
-                                            >
-                                                New
-                                            </span>
-                                        </td>
-                                        <td class="p-2">
-                                            <button
-                                                v-if="!c.is_seen"
-                                                @click="markSeen(c)"
-                                                class="bg-blue-600 text-white px-3 py-1 rounded mr-2 text-sm"
-                                            >
-                                                Mark Seen
-                                            </button>
-                                            <button
-                                                @click="deleteContact(c.id)"
-                                                class="bg-red-500 text-white px-3 py-1 rounded text-sm"
-                                            >
-                                                Delete
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
+                            <img
+                                v-if="p.thumbnail"
+                                :src="p.thumbnail"
+                                class="w-full h-full object-cover"
+                                alt="Project"
+                            />
                             <div
-                                v-if="recentContacts.length === 0"
-                                class="py-6 text-center text-gray-500"
+                                v-else
+                                class="w-full h-full flex items-center justify-center text-slate-300"
                             >
-                                No recent messages.
+                                <Image class="w-5 h-5" />
                             </div>
                         </div>
+
+                        <div class="flex-1 min-w-0">
+                            <h4
+                                class="text-sm font-semibold text-slate-800 truncate"
+                            >
+                                {{ p.title }}
+                            </h4>
+                            <p class="text-xs text-slate-500 truncate mt-0.5">
+                                {{ p.tech_stack }}
+                            </p>
+                        </div>
+
+                        <ChevronRight class="w-4 h-4 text-slate-300 mt-2" />
                     </div>
 
-                    <!-- Latest projects -->
-                    <div class="bg-white rounded shadow-sm p-4">
-                        <div class="flex items-center justify-between mb-3">
-                            <h2 class="text-xl font-semibold">
-                                Latest Projects
-                            </h2>
-                            <button
-                                @click="loadLatestProjects"
-                                class="text-sm text-blue-600 hover:underline"
-                            >
-                                Refresh
-                            </button>
-                        </div>
-
-                        <div
-                            v-if="projectsLoading"
-                            class="py-8 text-center text-gray-500"
-                        >
-                            Loading...
-                        </div>
-
-                        <ul v-else class="space-y-3">
-                            <li
-                                v-for="p in latestProjects"
-                                :key="p.id"
-                                class="flex items-start gap-3 border rounded p-3"
-                            >
-                                <div
-                                    class="w-12 h-12 bg-gray-100 rounded flex items-center justify-center text-gray-400"
-                                >
-                                    <!-- thumbnail placeholder -->
-                                    <img
-                                        v-if="p.thumbnail"
-                                        :src="p.thumbnail"
-                                        alt=""
-                                        class="w-full h-full object-cover rounded"
-                                    />
-                                    <span v-else>📷</span>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="font-semibold">
-                                        {{ p.title }}
-                                    </div>
-                                    <div class="text-sm text-gray-500 truncate">
-                                        {{ p.tech_stack }}
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-
-                        <div
-                            v-if="latestProjects.length === 0"
-                            class="py-6 text-center text-gray-500"
-                        >
-                            No projects yet.
-                        </div>
+                    <div
+                        v-if="latestProjects.length === 0"
+                        class="text-center py-6 text-slate-400 text-sm"
+                    >
+                        No projects added yet.
                     </div>
+                </div>
+
+                <div class="mt-auto p-4 border-t border-slate-100">
+                    <router-link
+                        to="/admin/projects"
+                        class="block w-full py-2 text-center text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                    >
+                        View All Projects
+                    </router-link>
                 </div>
             </div>
         </div>
@@ -238,14 +333,26 @@
 import { ref, onMounted } from "vue";
 import { useToast } from "vue-toastification";
 import Swal from "sweetalert2";
-
-import Sidebar from "../components/Sidebar.vue";
-import Topbar from "../components/Topbar.vue";
 import api from "../services/api";
+
+// Import Icons (Ensure you installed lucide-vue-next)
+import {
+    Briefcase,
+    Award,
+    Mail,
+    FileText,
+    RefreshCw,
+    MessageSquare,
+    Layers,
+    CheckCircle,
+    Trash2,
+    Image,
+    ChevronRight,
+} from "lucide-vue-next";
 
 const toast = useToast();
 
-// state
+// State
 const stats = ref({
     projects: 0,
     skills: 0,
@@ -256,11 +363,10 @@ const stats = ref({
 
 const recentContacts = ref([]);
 const latestProjects = ref([]);
-
 const contactsLoading = ref(false);
 const projectsLoading = ref(false);
 
-// small helper to normalize absolute URL -> relative (we used similar earlier)
+// Helper for URLs
 function normalizeUrl(url) {
     if (typeof url !== "string") return url;
     try {
@@ -269,37 +375,36 @@ function normalizeUrl(url) {
             return u.pathname + u.search;
         }
     } catch (e) {
-        // ignore
+        /* ignore */
     }
     return url;
 }
 
-/* Load all counts & small lists */
+// 1. Load Stats
 const loadStats = async () => {
     try {
-        // we fetch index for each resource and derive counts
-        // If your API returns meta counts in a single endpoint, you can replace with that
+        const [pr, sk, ex, co, bl] = await Promise.all([
+            api.get(normalizeUrl("/api/admin/projects")),
+            api.get(normalizeUrl("/api/admin/skills")),
+            api.get(normalizeUrl("/api/admin/experiences")),
+            api.get(normalizeUrl("/api/admin/contacts")),
+            api.get(normalizeUrl("/api/admin/blogs")),
+        ]);
+
         // Projects
-        const pr = await api.get(normalizeUrl("/api/admin/projects"));
         stats.value.projects = Array.isArray(pr.data)
             ? pr.data.length
             : pr.data?.data?.length ?? 0;
-
         // Skills
-        const sk = await api.get(normalizeUrl("/api/admin/skills"));
         stats.value.skills = Array.isArray(sk.data)
             ? sk.data.length
             : sk.data?.data?.length ?? 0;
-
         // Experiences
-        const ex = await api.get(normalizeUrl("/api/admin/experiences"));
         stats.value.experiences = Array.isArray(ex.data)
             ? ex.data.length
             : ex.data?.data?.length ?? 0;
 
-        // Contacts — unread
-        const co = await api.get(normalizeUrl("/api/admin/contacts"));
-        // compute unread
+        // Unread Contacts
         const allContacts = Array.isArray(co.data)
             ? co.data
             : co.data?.data ?? [];
@@ -307,28 +412,26 @@ const loadStats = async () => {
             (c) => !c.is_seen
         ).length;
 
-        // Blogs — published count
-        const bl = await api.get(normalizeUrl("/api/admin/blogs"));
+        // Published Blogs
         const allBlogs = Array.isArray(bl.data) ? bl.data : bl.data?.data ?? [];
         stats.value.publishedBlogs = allBlogs.filter(
             (b) => b.is_published || b.published === true
         ).length;
     } catch (err) {
         console.error("loadStats error", err);
-        toast.error("Failed to load dashboard stats");
+        // Silent fail or minimal toast to not annoy user
     }
 };
 
-/* Recent contacts (latest 5) */
+// 2. Load Recent Contacts
 const loadRecentContacts = async () => {
     contactsLoading.value = true;
     try {
-        // If your API supports sorting or per_page, use query params: ?per_page=5&sort=-created_at
         const res = await api.get(normalizeUrl("/api/admin/contacts"), {
             params: { per_page: 5 },
         });
         const data = Array.isArray(res.data) ? res.data : res.data?.data ?? [];
-        // sort by created_at desc if timestamp present
+
         recentContacts.value = data
             .slice()
             .sort((a, b) => {
@@ -338,22 +441,21 @@ const loadRecentContacts = async () => {
             })
             .slice(0, 5);
     } catch (err) {
-        console.error("loadRecentContacts", err);
         toast.error("Failed to load messages");
     } finally {
         contactsLoading.value = false;
     }
 };
 
-/* Latest projects */
+// 3. Load Latest Projects
 const loadLatestProjects = async () => {
     projectsLoading.value = true;
     try {
         const res = await api.get(normalizeUrl("/api/admin/projects"), {
-            params: { per_page: 6 },
+            params: { per_page: 5 },
         });
         const data = Array.isArray(res.data) ? res.data : res.data?.data ?? [];
-        // newest first by created_at or id
+
         latestProjects.value = data
             .slice()
             .sort((a, b) => {
@@ -361,85 +463,60 @@ const loadLatestProjects = async () => {
                     return new Date(b.created_at) - new Date(a.created_at);
                 return b.id - a.id;
             })
-            .slice(0, 6);
+            .slice(0, 5);
     } catch (err) {
-        console.error("loadLatestProjects", err);
         toast.error("Failed to load projects");
     } finally {
         projectsLoading.value = false;
     }
 };
 
-/* Mark a contact as seen */
+// Actions
 const markSeen = async (contact) => {
+    // Optimistic UI update (Instant feedback)
+    const originalState = contact.is_seen;
+    contact.is_seen = true;
+    stats.value.unreadContacts = Math.max(0, stats.value.unreadContacts - 1);
+
     try {
-        const confirm = await Swal.fire({
-            title: "Mark as seen?",
-            text: `Mark message from "${contact.name}" as seen?`,
-            icon: "question",
-            showCancelButton: true,
-        });
-
-        if (!confirm.isConfirmed) return;
-
-        // patch/put to update is_seen. Backend expects PUT /api/admin/contacts/{id}
         await api.put(normalizeUrl(`/api/admin/contacts/${contact.id}`), {
             ...contact,
             is_seen: true,
         });
-
         toast.success("Marked as seen");
-        // update local list and stats
-        contact.is_seen = true;
-        stats.value.unreadContacts = Math.max(
-            0,
-            stats.value.unreadContacts - 1
-        );
     } catch (err) {
-        console.error("markSeen error", err);
-        toast.error("Could not mark as seen");
+        // Revert on failure
+        contact.is_seen = originalState;
+        stats.value.unreadContacts++;
+        toast.error("Could not update status");
     }
 };
 
-/* Delete contact */
 const deleteContact = async (id) => {
+    const confirm = await Swal.fire({
+        title: "Delete message?",
+        text: "This action cannot be undone.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#ef4444",
+        cancelButtonColor: "#64748b",
+        confirmButtonText: "Yes, delete it!",
+    });
+
+    if (!confirm.isConfirmed) return;
+
     try {
-        const confirm = await Swal.fire({
-            title: "Delete message?",
-            text: "This action cannot be undone",
-            icon: "warning",
-            showCancelButton: true,
-        });
-
-        if (!confirm.isConfirmed) return;
-
         await api.delete(normalizeUrl(`/api/admin/contacts/${id}`));
         toast.success("Message deleted");
-        // remove locally
         recentContacts.value = recentContacts.value.filter((c) => c.id !== id);
-        // reload stats to sync
-        await loadStats();
     } catch (err) {
-        console.error("deleteContact", err);
         toast.error("Could not delete message");
     }
 };
 
-onMounted(async () => {
-    await Promise.all([
-        loadStats(),
-        loadRecentContacts(),
-        loadLatestProjects(),
-    ]);
+onMounted(() => {
+    loadStats();
+    loadRecentContacts();
+    loadLatestProjects();
 });
 </script>
-
-<style scoped>
-/* small tweaks */
-.table-img {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 4px;
-}
-</style>
