@@ -2,16 +2,20 @@
     <div
         class="flex h-screen bg-slate-950 text-slate-200 font-sans overflow-hidden selection:bg-blue-500/30"
     >
-        <Sidebar :isOpen="isSidebarOpen" @toggleSidebar="toggleSidebar" />
+        <Sidebar
+            :isOpen="isSidebarOpen"
+            @toggleSidebar="toggleSidebar"
+            @closeSidebar="isSidebarOpen = false"
+        />
 
         <div
-            class="flex-1 flex flex-col transition-all duration-300 ease-in-out"
-            :class="isSidebarOpen ? 'ml-72' : 'ml-20'"
+            class="flex-1 flex flex-col transition-all duration-300 ease-in-out w-full"
+            :class="isSidebarOpen ? 'lg:ml-72' : 'lg:ml-20'"
         >
-            <Topbar />
+            <Topbar @toggleSidebar="toggleSidebar" />
 
             <main
-                class="flex-1 overflow-x-hidden overflow-y-auto bg-slate-950 p-6 scroll-smooth custom-scrollbar"
+                class="flex-1 overflow-x-hidden overflow-y-auto bg-slate-950 p-4 md:p-6 scroll-smooth custom-scrollbar relative"
             >
                 <router-view v-slot="{ Component }">
                     <transition
@@ -31,16 +35,32 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import Sidebar from "../Sidebar.vue";
 import Topbar from "../Topbar.vue";
 
-// সাইডবার ডিফল্টভাবে ওপেন থাকবে
 const isSidebarOpen = ref(true);
+
+const checkScreenSize = () => {
+    if (window.innerWidth < 1024) {
+        isSidebarOpen.value = false;
+    } else {
+        isSidebarOpen.value = true;
+    }
+};
 
 const toggleSidebar = () => {
     isSidebarOpen.value = !isSidebarOpen.value;
 };
+
+onMounted(() => {
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+});
+
+onUnmounted(() => {
+    window.removeEventListener("resize", checkScreenSize);
+});
 </script>
 
 <style>

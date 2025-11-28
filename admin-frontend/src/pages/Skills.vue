@@ -298,6 +298,8 @@ import {
     X,
     ChevronLeft,
     ChevronRight,
+    Zap,
+    Code,
 } from "lucide-vue-next";
 
 // State & Logic

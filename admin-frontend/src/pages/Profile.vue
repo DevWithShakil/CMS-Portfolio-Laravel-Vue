@@ -1,10 +1,12 @@
 <template>
-    <div class="min-h-screen space-y-8 pb-12">
+    <div class="min-h-screen space-y-6 lg:space-y-8 pb-12">
         <div
             class="flex flex-col md:flex-row md:items-center justify-between gap-4"
         >
             <div>
-                <h1 class="text-3xl font-bold text-white tracking-tight">
+                <h1
+                    class="text-2xl md:text-3xl font-bold text-white tracking-tight"
+                >
                     Admin
                     <span
                         class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500"
@@ -17,9 +19,9 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
             <div
-                class="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-lg relative overflow-hidden"
+                class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-lg relative overflow-hidden"
             >
                 <div
                     class="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl"
@@ -44,7 +46,7 @@
                             <input
                                 v-model="form.name"
                                 type="text"
-                                class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-slate-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-slate-200 text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600"
                             />
                         </div>
                     </div>
@@ -61,7 +63,7 @@
                             <input
                                 v-model="form.email"
                                 type="email"
-                                class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-slate-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-slate-200 text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600"
                             />
                         </div>
                     </div>
@@ -70,7 +72,7 @@
                         <button
                             type="submit"
                             :disabled="isSubmitting"
-                            class="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-medium shadow-lg shadow-blue-600/20 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                            class="w-full md:w-auto flex justify-center items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-medium shadow-lg shadow-blue-600/20 transition-all disabled:opacity-70 disabled:cursor-not-allowed active:scale-95"
                         >
                             <Save class="w-4 h-4" />
                             <span v-if="isSubmitting">Updating...</span>
@@ -81,7 +83,7 @@
             </div>
 
             <div
-                class="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-lg relative overflow-hidden"
+                class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-lg relative overflow-hidden"
             >
                 <div
                     class="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-3xl"
@@ -108,7 +110,7 @@
                                 v-model="passForm.current_password"
                                 type="password"
                                 placeholder="••••••••"
-                                class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-slate-200 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all placeholder:text-slate-600"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-slate-200 text-sm focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all placeholder:text-slate-600"
                             />
                         </div>
                     </div>
@@ -127,7 +129,7 @@
                                     v-model="passForm.password"
                                     type="password"
                                     placeholder="New Password"
-                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-slate-200 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all placeholder:text-slate-600"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-slate-200 text-sm focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all placeholder:text-slate-600"
                                 />
                             </div>
                         </div>
@@ -145,7 +147,7 @@
                                     v-model="passForm.password_confirmation"
                                     type="password"
                                     placeholder="Confirm Password"
-                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-slate-200 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all placeholder:text-slate-600"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-slate-200 text-sm focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all placeholder:text-slate-600"
                                 />
                             </div>
                         </div>
@@ -155,7 +157,7 @@
                         <button
                             type="submit"
                             :disabled="isPassSubmitting"
-                            class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2.5 rounded-xl font-medium shadow-lg shadow-emerald-600/20 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                            class="w-full md:w-auto flex justify-center items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2.5 rounded-xl font-medium shadow-lg shadow-emerald-600/20 transition-all disabled:opacity-70 disabled:cursor-not-allowed active:scale-95"
                         >
                             <Shield class="w-4 h-4" />
                             <span v-if="isPassSubmitting">Updating...</span>
@@ -220,16 +222,17 @@ const updateProfile = async () => {
         });
 
         toast.success("Profile updated successfully!");
-        const updatedUser = {
-            name: form.value.name,
-            email: form.value.email,
-        };
+
+        // Update LocalStorage & Trigger Event
         localStorage.setItem("admin_name", form.value.name);
         localStorage.setItem("admin_email", form.value.email);
         window.dispatchEvent(new Event("profile-updated"));
     } catch (err) {
-        // ... error handling
-        toast.error("Failed to update.");
+        if (err.response && err.response.status === 422) {
+            toast.error(err.response.data.message);
+        } else {
+            toast.error("Failed to update profile.");
+        }
     } finally {
         isSubmitting.value = false;
     }
@@ -237,7 +240,6 @@ const updateProfile = async () => {
 
 // Update Password
 const updatePassword = async () => {
-    // Basic validation
     if (!passForm.value.current_password || !passForm.value.password) {
         toast.warning("Please fill in required password fields.");
         return;
@@ -249,7 +251,6 @@ const updatePassword = async () => {
 
     isPassSubmitting.value = true;
     try {
-        // Send all data, but only password fields matter here
         await api.put("/api/admin/profile", {
             name: form.value.name,
             email: form.value.email,
@@ -260,13 +261,11 @@ const updatePassword = async () => {
 
         toast.success("Password changed successfully!");
 
-        // Clear fields
         passForm.value.current_password = "";
         passForm.value.password = "";
         passForm.value.password_confirmation = "";
     } catch (err) {
         if (err.response && err.response.status === 422) {
-            // Show specific error (e.g. Current password incorrect)
             const errors = err.response.data.errors;
             if (errors.current_password)
                 toast.error(errors.current_password[0]);

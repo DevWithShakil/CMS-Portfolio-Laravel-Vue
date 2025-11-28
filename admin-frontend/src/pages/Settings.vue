@@ -4,7 +4,9 @@
             class="flex flex-col md:flex-row md:items-center justify-between gap-4"
         >
             <div>
-                <h1 class="text-3xl font-bold text-white tracking-tight">
+                <h1
+                    class="text-2xl md:text-3xl font-bold text-white tracking-tight"
+                >
                     System
                     <span
                         class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400"
@@ -18,7 +20,7 @@
 
             <button
                 @click="updateSettings"
-                class="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-blue-500/20 transition-all hover:-translate-y-0.5"
+                class="w-full md:w-auto flex justify-center items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-blue-500/20 transition-all hover:-translate-y-0.5 active:scale-95"
                 :disabled="isSubmitting"
             >
                 <Save class="w-5 h-5" />
@@ -27,8 +29,8 @@
             </button>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="space-y-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+            <div class="space-y-6 lg:space-y-8">
                 <div
                     class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg text-center relative overflow-hidden group"
                 >
@@ -37,7 +39,9 @@
                     ></div>
 
                     <div class="relative z-10 mt-8">
-                        <div class="relative w-36 h-36 mx-auto mb-4">
+                        <div
+                            class="relative w-32 h-32 md:w-36 md:h-36 mx-auto mb-4"
+                        >
                             <div
                                 class="w-full h-full rounded-full border-4 border-slate-900 overflow-hidden bg-slate-800 shadow-2xl relative group-hover:border-blue-500/50 transition-colors"
                             >
@@ -50,14 +54,14 @@
                                     v-else
                                     class="w-full h-full flex items-center justify-center text-slate-600"
                                 >
-                                    <User class="w-16 h-16" />
+                                    <User class="w-12 h-12 md:w-16 md:h-16" />
                                 </div>
                             </div>
 
                             <label
                                 class="absolute bottom-1 right-1 p-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-full cursor-pointer shadow-lg transition-transform hover:scale-110 border-4 border-slate-900"
                             >
-                                <Camera class="w-5 h-5" />
+                                <Camera class="w-4 h-4 md:w-5 md:h-5" />
                                 <input
                                     type="file"
                                     @change="handleFileChange"
@@ -67,7 +71,7 @@
                             </label>
                         </div>
 
-                        <h3 class="text-xl font-bold text-white">
+                        <h3 class="text-lg md:text-xl font-bold text-white">
                             {{ form.site_title || "Your Name" }}
                         </h3>
                         <p class="text-sm text-slate-400 mt-1">
@@ -94,10 +98,10 @@
                                 class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                             />
                             <div
-                                class="w-full border-2 border-dashed border-slate-700 hover:border-blue-500/50 rounded-xl p-8 text-center transition-colors bg-slate-950/50 group-hover:bg-slate-900"
+                                class="w-full border-2 border-dashed border-slate-700 hover:border-blue-500/50 rounded-xl p-6 md:p-8 text-center transition-colors bg-slate-950/50 group-hover:bg-slate-900"
                             >
                                 <UploadCloud
-                                    class="w-10 h-10 text-slate-500 mx-auto mb-3 group-hover:text-blue-400 transition-colors"
+                                    class="w-8 h-8 md:w-10 md:h-10 text-slate-500 mx-auto mb-3 group-hover:text-blue-400 transition-colors"
                                 />
                                 <p class="text-sm text-slate-300 font-medium">
                                     {{
@@ -120,7 +124,7 @@
                                 class="flex items-center gap-3 overflow-hidden"
                             >
                                 <div
-                                    class="p-2 bg-red-500/10 text-red-400 rounded-lg"
+                                    class="p-2 bg-red-500/10 text-red-400 rounded-lg shrink-0"
                                 >
                                     <FileText class="w-4 h-4" />
                                 </div>
@@ -142,9 +146,9 @@
                 </div>
             </div>
 
-            <div class="lg:col-span-2 space-y-8">
+            <div class="lg:col-span-2 space-y-6 lg:space-y-8">
                 <div
-                    class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg"
+                    class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-lg"
                 >
                     <h3
                         class="text-lg font-bold text-white mb-6 flex items-center gap-2 border-b border-slate-800 pb-4"
@@ -153,7 +157,7 @@
                         Information
                     </h3>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                         <div class="space-y-1.5">
                             <label
                                 class="text-xs font-semibold text-slate-400 uppercase"
@@ -163,7 +167,7 @@
                                 v-model="form.site_title"
                                 type="text"
                                 placeholder="e.g. Shakil Portfolio"
-                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600 text-sm"
                             />
                         </div>
 
@@ -176,7 +180,7 @@
                                 v-model="form.hero_title"
                                 type="text"
                                 placeholder="e.g. Hi, I'm Shakil"
-                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600 text-sm"
                             />
                         </div>
 
@@ -189,7 +193,7 @@
                                 v-model="form.hero_subtitle"
                                 type="text"
                                 placeholder="e.g. Building digital experiences that matter."
-                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600 text-sm"
                             />
                         </div>
 
@@ -202,14 +206,14 @@
                                 v-model="form.about"
                                 rows="5"
                                 placeholder="Brief bio about yourself..."
-                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600 custom-scrollbar leading-relaxed"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600 custom-scrollbar leading-relaxed text-sm"
                             ></textarea>
                         </div>
                     </div>
                 </div>
 
                 <div
-                    class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg"
+                    class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-lg"
                 >
                     <h3
                         class="text-lg font-bold text-white mb-6 flex items-center gap-2 border-b border-slate-800 pb-4"
@@ -218,7 +222,7 @@
                         Connections
                     </h3>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                         <div class="space-y-1.5">
                             <label
                                 class="text-xs font-semibold text-slate-400 uppercase"
@@ -232,7 +236,7 @@
                                     v-model="form.facebook"
                                     type="text"
                                     placeholder="https://facebook.com/..."
-                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-slate-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-slate-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600 text-sm"
                                 />
                             </div>
                         </div>
@@ -250,7 +254,7 @@
                                     v-model="form.github"
                                     type="text"
                                     placeholder="https://github.com/..."
-                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-slate-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-slate-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600 text-sm"
                                 />
                             </div>
                         </div>
@@ -268,7 +272,7 @@
                                     v-model="form.linkedin"
                                     type="text"
                                     placeholder="https://linkedin.com/in/..."
-                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-slate-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-slate-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600 text-sm"
                                 />
                             </div>
                         </div>
@@ -286,7 +290,7 @@
                                     v-model="form.youtube"
                                     type="text"
                                     placeholder="https://youtube.com/..."
-                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-slate-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-slate-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600 text-sm"
                                 />
                             </div>
                         </div>
@@ -318,15 +322,15 @@ import {
 const toast = useToast();
 const isSubmitting = ref(false);
 
-// State Management (Matches your DB Schema)
+// State Management
 const form = ref({
     id: null,
     site_title: "",
     hero_title: "",
     hero_subtitle: "",
     about: "",
-    profile_image: "", // String URL from DB
-    resume_file: "", // String URL from DB (Fixed Name)
+    profile_image: "",
+    resume_file: "",
     facebook: "",
     youtube: "",
     github: "",
@@ -338,26 +342,22 @@ const previewImage = ref(null);
 const selectedProfileImage = ref(null);
 const selectedResume = ref(null);
 
-// ✅ Helper: Fix Image URL
+// URL Helper
 const getAssetUrl = (path) => {
     if (!path) return null;
     return path.startsWith("http") ? path : `http://127.0.0.1:8000${path}`;
 };
 
-/* -------------------------------------
-   📥 Load Settings
-   ------------------------------------- */
+/* Load Settings */
 const loadSettings = async () => {
     try {
         const res = await api.get("/api/admin/settings");
-        // Handle array or object response
         const data = Array.isArray(res.data)
             ? res.data[0]
             : res.data.data || res.data;
 
         if (data) {
             form.value = { ...data };
-            // Set initial preview if exists
             previewImage.value = getAssetUrl(data.profile_image);
         }
     } catch (e) {
@@ -367,14 +367,12 @@ const loadSettings = async () => {
 
 onMounted(loadSettings);
 
-/* -------------------------------------
-   📁 File Selection Handlers
-   ------------------------------------- */
+/* File Handlers */
 const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
         selectedProfileImage.value = file;
-        previewImage.value = URL.createObjectURL(file); // Show instant preview
+        previewImage.value = URL.createObjectURL(file);
     }
 };
 
@@ -386,17 +384,13 @@ const handleResumeChange = (event) => {
     }
 };
 
-/* -------------------------------------
-   💾 Update Settings (FormData Logic)
-   ------------------------------------- */
+/* Update Settings */
 const updateSettings = async () => {
     isSubmitting.value = true;
     try {
         const formData = new FormData();
 
-        // 1. Append all text fields
         Object.keys(form.value).forEach((key) => {
-            // Don't append nulls or the old image strings directly
             if (
                 form.value[key] !== null &&
                 key !== "profile_image" &&
@@ -406,34 +400,27 @@ const updateSettings = async () => {
             }
         });
 
-        // 2. Append Profile Image (if new one selected)
         if (selectedProfileImage.value) {
             formData.append("profile_image", selectedProfileImage.value);
         }
 
-        // 3. Append Resume File (if new one selected)
         if (selectedResume.value) {
             formData.append("resume_file", selectedResume.value);
         }
 
-        // 4. Method Spoofing for Laravel PUT
         formData.append("_method", "PUT");
 
-        // 5. Send Request
-        // Note: Using POST method with _method: PUT
         await api.post(`/api/admin/settings/${form.value.id}`, formData);
 
         toast.success("Settings updated successfully!");
 
-        // Reset file inputs
-        selectedProfileImage.value = null;
-        selectedResume.value = null;
+        // Trigger global event to update Sidebar/Dashboard brand name
+        window.dispatchEvent(new Event("profile-updated"));
 
-        // Reload to get fresh URLs from backend
         loadSettings();
     } catch (err) {
+        toast.error("Failed to update settings.");
         console.error(err);
-        toast.error("Failed to update settings. Check console.");
     } finally {
         isSubmitting.value = false;
     }

@@ -4,7 +4,9 @@
             class="flex flex-col md:flex-row md:items-center justify-between gap-4"
         >
             <div>
-                <h1 class="text-3xl font-bold text-white tracking-tight">
+                <h1
+                    class="text-2xl md:text-3xl font-bold text-white tracking-tight"
+                >
                     Project
                     <span
                         class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400"
@@ -12,15 +14,16 @@
                     >
                 </h1>
                 <p class="text-sm text-slate-400 mt-1">
-                    Manage your creative work.
+                    Manage and organize your creative work.
                 </p>
             </div>
 
             <button
                 @click="openCreateModal"
-                class="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg transition-all"
+                class="w-full md:w-auto flex justify-center items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg transition-all active:scale-95"
             >
-                <Plus class="w-5 h-5" /> <span>Add Project</span>
+                <Plus class="w-5 h-5" />
+                <span>Add Project</span>
             </button>
         </div>
 
@@ -36,13 +39,89 @@
                     @input="loadProjects('/api/admin/projects')"
                     type="text"
                     placeholder="Search projects..."
-                    class="w-full bg-slate-950 border border-slate-800 text-slate-200 text-sm rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:border-blue-500/50 transition-all placeholder:text-slate-600"
+                    class="w-full bg-slate-950 border border-slate-800 text-slate-200 text-sm rounded-xl pl-10 pr-4 py-3 md:py-2.5 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-600"
                 />
+            </div>
+
+            <div class="hidden md:block text-xs text-slate-500 font-medium">
+                Manage your showcase
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:hidden gap-4">
+            <div
+                v-for="project in projects"
+                :key="project.id"
+                class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col gap-4"
+            >
+                <div class="flex items-start gap-4">
+                    <div
+                        class="w-16 h-16 rounded-lg bg-slate-800 overflow-hidden shrink-0 border border-slate-700"
+                    >
+                        <img
+                            v-if="project.thumbnail"
+                            :src="getThumbnailUrl(project.thumbnail)"
+                            class="w-full h-full object-cover"
+                        />
+                        <div
+                            v-else
+                            class="w-full h-full flex items-center justify-center text-slate-600"
+                        >
+                            <Image class="w-6 h-6" />
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="font-bold text-white truncate">
+                            {{ project.title }}
+                        </h3>
+                        <div class="flex gap-2 mt-2">
+                            <a
+                                v-if="project.github_link"
+                                :href="project.github_link"
+                                target="_blank"
+                                class="text-slate-400 hover:text-white bg-slate-800 p-1.5 rounded-lg"
+                                ><Github class="w-4 h-4"
+                            /></a>
+                            <a
+                                v-if="project.live_link"
+                                :href="project.live_link"
+                                target="_blank"
+                                class="text-slate-400 hover:text-white bg-slate-800 p-1.5 rounded-lg"
+                                ><ExternalLink class="w-4 h-4"
+                            /></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-1.5">
+                    <span
+                        class="text-[10px] font-medium px-2 py-1 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                    >
+                        {{ project.tech_stack }}
+                    </span>
+                </div>
+
+                <div
+                    class="grid grid-cols-2 gap-3 mt-auto pt-4 border-t border-slate-800"
+                >
+                    <button
+                        @click="editProject(project)"
+                        class="flex items-center justify-center gap-2 py-2 rounded-xl bg-slate-800 text-amber-400 text-sm font-medium hover:bg-slate-700"
+                    >
+                        <Edit3 class="w-4 h-4" /> Edit
+                    </button>
+                    <button
+                        @click="confirmDelete(project.id)"
+                        class="flex items-center justify-center gap-2 py-2 rounded-xl bg-slate-800 text-rose-400 text-sm font-medium hover:bg-slate-700"
+                    >
+                        <Trash2 class="w-4 h-4" /> Delete
+                    </button>
+                </div>
             </div>
         </div>
 
         <div
-            class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-lg"
+            class="hidden lg:block bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-lg"
         >
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
@@ -75,7 +154,6 @@
                                                 )
                                             "
                                             class="w-full h-full object-cover"
-                                            alt="thumb"
                                         />
                                         <div
                                             v-else
@@ -97,12 +175,10 @@
                                 </div>
                             </td>
                             <td class="p-5">
-                                <div class="flex flex-wrap gap-1.5 max-w-xs">
-                                    <span
-                                        class="text-[10px] font-medium px-2 py-1 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20"
-                                        >{{ project.tech_stack }}</span
-                                    >
-                                </div>
+                                <span
+                                    class="text-[10px] font-medium px-2 py-1 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                                    >{{ project.tech_stack }}</span
+                                >
                             </td>
                             <td class="p-5">
                                 <div class="flex gap-2">
@@ -163,9 +239,9 @@
                     @click.stop
                 >
                     <div
-                        class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900"
+                        class="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-900 shrink-0"
                     >
-                        <h2 class="text-xl font-bold text-white">
+                        <h2 class="text-lg md:text-xl font-bold text-white">
                             {{ editMode ? "Edit Project" : "New Project" }}
                         </h2>
                         <button
@@ -176,8 +252,8 @@
                         </button>
                     </div>
 
-                    <div class="p-6 overflow-y-auto custom-scrollbar space-y-5">
-                        <div class="grid grid-cols-2 gap-4">
+                    <div class="p-5 overflow-y-auto custom-scrollbar space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="space-y-1.5">
                                 <label
                                     class="text-xs font-semibold text-slate-400 uppercase"
@@ -186,7 +262,7 @@
                                 <input
                                     v-model="form.title"
                                     type="text"
-                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-blue-500/50"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 text-sm focus:outline-none focus:border-blue-500/50"
                                 />
                             </div>
                             <div class="space-y-1.5">
@@ -197,7 +273,7 @@
                                 <input
                                     v-model="form.slug"
                                     type="text"
-                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-blue-500/50"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 text-sm focus:outline-none focus:border-blue-500/50"
                                 />
                             </div>
                         </div>
@@ -211,7 +287,7 @@
                                 v-model="form.tech_stack"
                                 type="text"
                                 placeholder="Vue, Laravel..."
-                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-blue-500/50"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 text-sm focus:outline-none focus:border-blue-500/50"
                             />
                         </div>
 
@@ -229,13 +305,11 @@
                                     accept="image/*"
                                     class="absolute inset-0 opacity-0 cursor-pointer z-10"
                                 />
-
                                 <img
                                     v-if="previewImage"
                                     :src="previewImage"
                                     class="absolute inset-0 w-full h-full object-cover z-0"
                                 />
-
                                 <div
                                     v-else
                                     class="flex flex-col items-center justify-center text-slate-500"
@@ -243,7 +317,6 @@
                                     <UploadCloud class="w-8 h-8 mb-2" />
                                     <span class="text-xs">Upload Image</span>
                                 </div>
-
                                 <button
                                     v-if="previewImage"
                                     @click.prevent="removeImage"
@@ -254,7 +327,7 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="space-y-1.5">
                                 <label
                                     class="text-xs font-semibold text-slate-400 uppercase"
@@ -263,7 +336,7 @@
                                 <input
                                     v-model="form.github_link"
                                     type="text"
-                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-blue-500/50"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 text-sm focus:outline-none focus:border-blue-500/50"
                                 />
                             </div>
                             <div class="space-y-1.5">
@@ -274,7 +347,7 @@
                                 <input
                                     v-model="form.live_link"
                                     type="text"
-                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-blue-500/50"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 text-sm focus:outline-none focus:border-blue-500/50"
                                 />
                             </div>
                         </div>
@@ -287,17 +360,17 @@
                             <textarea
                                 v-model="form.description"
                                 rows="4"
-                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-blue-500/50 custom-scrollbar"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 text-sm focus:outline-none focus:border-blue-500/50 custom-scrollbar"
                             ></textarea>
                         </div>
                     </div>
 
                     <div
-                        class="p-6 border-t border-slate-800 bg-slate-900 flex justify-end gap-3"
+                        class="p-5 border-t border-slate-800 bg-slate-900 flex justify-end gap-3 shrink-0"
                     >
                         <button
                             @click="closeModal"
-                            class="px-5 py-2.5 rounded-xl font-medium text-slate-300 hover:text-white hover:bg-slate-800"
+                            class="px-5 py-2.5 rounded-xl font-medium text-slate-300 hover:text-white hover:bg-slate-800 text-sm"
                         >
                             Cancel
                         </button>
@@ -305,7 +378,7 @@
                             @click="
                                 editMode ? updateProject() : createProject()
                             "
-                            class="px-5 py-2.5 rounded-xl font-medium bg-blue-600 hover:bg-blue-500 text-white shadow-lg"
+                            class="px-5 py-2.5 rounded-xl font-medium bg-blue-600 hover:bg-blue-500 text-white shadow-lg text-sm w-full md:w-auto flex justify-center"
                             :disabled="isSubmitting"
                         >
                             <span v-if="isSubmitting">Saving...</span>
@@ -359,7 +432,7 @@ const form = ref({
     live_link: "",
 });
 
-// ✅ URL Helper: Fixes broken images from backend
+// ✅ URL Helper
 const getThumbnailUrl = (path) => {
     if (!path) return null;
     return path.startsWith("http") ? path : `http://127.0.0.1:8000${path}`;

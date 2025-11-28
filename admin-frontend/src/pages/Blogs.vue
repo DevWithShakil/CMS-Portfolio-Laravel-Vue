@@ -4,7 +4,9 @@
             class="flex flex-col md:flex-row md:items-center justify-between gap-4"
         >
             <div>
-                <h1 class="text-3xl font-bold text-white tracking-tight">
+                <h1
+                    class="text-2xl md:text-3xl font-bold text-white tracking-tight"
+                >
                     Blog
                     <span
                         class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400"
@@ -18,7 +20,7 @@
 
             <button
                 @click="openCreateModal"
-                class="flex items-center gap-2 bg-purple-600 hover:bg-purple-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg shadow-purple-500/20 transition-all hover:-translate-y-0.5"
+                class="w-full md:w-auto flex justify-center items-center gap-2 bg-purple-600 hover:bg-purple-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg shadow-purple-500/20 transition-all active:scale-95"
             >
                 <Plus class="w-5 h-5" />
                 <span>New Article</span>
@@ -37,10 +39,10 @@
                     @input="loadBlogs('/api/admin/blogs')"
                     type="text"
                     placeholder="Search articles..."
-                    class="w-full bg-slate-950 border border-slate-800 text-slate-200 text-sm rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all placeholder:text-slate-600"
+                    class="w-full bg-slate-950 border border-slate-800 text-slate-200 text-sm rounded-xl pl-10 pr-4 py-3 md:py-2.5 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all placeholder:text-slate-600"
                 />
             </div>
-            <div class="text-xs text-slate-500 font-medium">
+            <div class="hidden md:block text-xs text-slate-500 font-medium">
                 Total Articles:
                 <span class="text-purple-400">{{
                     pagination.total || blogs.length
@@ -75,7 +77,9 @@
                 :key="blog.id"
                 class="group bg-slate-900 border border-slate-800 hover:border-purple-500/30 rounded-2xl overflow-hidden shadow-lg transition-all hover:-translate-y-1 flex flex-col"
             >
-                <div class="relative h-48 overflow-hidden bg-slate-800">
+                <div
+                    class="relative h-48 overflow-hidden bg-slate-800 shrink-0"
+                >
                     <img
                         v-if="blog.thumbnail"
                         :src="getThumbnailUrl(blog.thumbnail)"
@@ -118,11 +122,11 @@
                     </div>
 
                     <div
-                        class="mt-auto pt-4 border-t border-slate-800 flex justify-between items-center"
+                        class="mt-auto pt-4 border-t border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0"
                     >
                         <button
                             @click="togglePublish(blog)"
-                            class="text-xs font-medium flex items-center gap-1.5 transition-colors"
+                            class="w-full sm:w-auto justify-center sm:justify-start text-xs font-medium flex items-center gap-1.5 transition-colors py-2 sm:py-0 rounded-lg sm:rounded-none bg-slate-800 sm:bg-transparent hover:bg-slate-700 sm:hover:bg-transparent"
                             :class="
                                 blog.is_published
                                     ? 'text-amber-400 hover:text-amber-300'
@@ -136,16 +140,18 @@
                             {{ blog.is_published ? "Unpublish" : "Publish" }}
                         </button>
 
-                        <div class="flex gap-2">
+                        <div
+                            class="flex gap-2 w-full sm:w-auto justify-center sm:justify-end"
+                        >
                             <button
                                 @click="editBlog(blog)"
-                                class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+                                class="flex-1 sm:flex-none flex justify-center p-2 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors"
                             >
                                 <Edit3 class="w-4 h-4" />
                             </button>
                             <button
                                 @click="confirmDelete(blog.id)"
-                                class="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors"
+                                class="flex-1 sm:flex-none flex justify-center p-2 text-rose-400 hover:text-rose-300 bg-slate-800 hover:bg-rose-500/10 rounded-lg transition-colors"
                             >
                                 <Trash2 class="w-4 h-4" />
                             </button>
@@ -213,16 +219,16 @@
         >
             <div
                 v-if="showModal"
-                class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-sm"
+                class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm"
             >
                 <div
                     class="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]"
                     @click.stop
                 >
                     <div
-                        class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900"
+                        class="p-5 md:p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900 shrink-0"
                     >
-                        <h2 class="text-xl font-bold text-white">
+                        <h2 class="text-lg md:text-xl font-bold text-white">
                             {{ editMode ? "Edit Article" : "New Article" }}
                         </h2>
                         <button
@@ -233,8 +239,10 @@
                         </button>
                     </div>
 
-                    <div class="p-6 overflow-y-auto custom-scrollbar space-y-5">
-                        <div class="grid grid-cols-2 gap-4">
+                    <div
+                        class="p-5 md:p-6 overflow-y-auto custom-scrollbar space-y-5"
+                    >
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="space-y-1.5">
                                 <label
                                     class="text-xs font-semibold text-slate-400 uppercase"
@@ -244,7 +252,7 @@
                                     v-model="form.title"
                                     type="text"
                                     placeholder="Article Title"
-                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all placeholder:text-slate-600"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 md:py-2.5 text-slate-200 text-sm focus:outline-none focus:border-purple-500/50"
                                 />
                             </div>
                             <div class="space-y-1.5">
@@ -256,72 +264,76 @@
                                     v-model="form.slug"
                                     type="text"
                                     placeholder="article-slug"
-                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all placeholder:text-slate-600"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 md:py-2.5 text-slate-200 text-sm focus:outline-none focus:border-purple-500/50"
                                 />
                             </div>
                         </div>
 
-                        <div class="space-y-1.5">
-                            <label
-                                class="text-xs font-semibold text-slate-400 uppercase"
-                                >Category</label
-                            >
-                            <select
-                                v-model="form.category_id"
-                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all"
-                            >
-                                <option value="" disabled>
-                                    Select Category
-                                </option>
-                                <option
-                                    v-for="cat in categories"
-                                    :key="cat.id"
-                                    :value="cat.id"
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1.5">
+                                <label
+                                    class="text-xs font-semibold text-slate-400 uppercase"
+                                    >Category</label
                                 >
-                                    {{ cat.name }}
-                                </option>
-                            </select>
-                        </div>
-
-                        <div class="space-y-1.5">
-                            <label
-                                class="text-xs font-semibold text-slate-400 uppercase"
-                                >Thumbnail</label
-                            >
-
-                            <div
-                                class="relative group w-full h-32 bg-slate-950 border border-dashed border-slate-700 rounded-xl hover:border-purple-500/50 hover:bg-slate-900 transition-all flex flex-col items-center justify-center cursor-pointer overflow-hidden"
-                            >
-                                <input
-                                    type="file"
-                                    @change="handleFileChange"
-                                    accept="image/*"
-                                    class="absolute inset-0 opacity-0 cursor-pointer z-10"
-                                />
-
-                                <img
-                                    v-if="previewImage"
-                                    :src="previewImage"
-                                    class="absolute inset-0 w-full h-full object-cover z-0"
-                                />
-
-                                <div
-                                    v-else
-                                    class="flex flex-col items-center justify-center text-slate-500 pointer-events-none group-hover:text-purple-400 transition-colors"
+                                <select
+                                    v-model="form.category_id"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 md:py-2.5 text-slate-200 text-sm focus:outline-none focus:border-purple-500/50"
                                 >
-                                    <UploadCloud class="w-8 h-8 mb-2" />
-                                    <span class="text-xs"
-                                        >Click or drag to upload image</span
+                                    <option value="" disabled>
+                                        Select Category
+                                    </option>
+                                    <option
+                                        v-for="cat in categories"
+                                        :key="cat.id"
+                                        :value="cat.id"
                                     >
-                                </div>
+                                        {{ cat.name }}
+                                    </option>
+                                </select>
+                            </div>
 
-                                <button
-                                    v-if="previewImage"
-                                    @click.prevent="removeImage"
-                                    class="absolute top-2 right-2 p-1 bg-red-500/80 text-white rounded-full hover:bg-red-600 z-20 transition shadow-sm"
+                            <div class="space-y-1.5">
+                                <label
+                                    class="text-xs font-semibold text-slate-400 uppercase"
+                                    >Thumbnail</label
                                 >
-                                    <X class="w-4 h-4" />
-                                </button>
+                                <div
+                                    class="relative group w-full h-12 md:h-[46px] bg-slate-950 border border-dashed border-slate-700 rounded-xl hover:border-purple-500/50 hover:bg-slate-900 transition-all flex items-center justify-center cursor-pointer overflow-hidden"
+                                >
+                                    <input
+                                        type="file"
+                                        @change="handleFileChange"
+                                        accept="image/*"
+                                        class="absolute inset-0 opacity-0 cursor-pointer z-10"
+                                    />
+
+                                    <div
+                                        v-if="previewImage"
+                                        class="w-full h-full flex items-center px-3 gap-2"
+                                    >
+                                        <img
+                                            :src="previewImage"
+                                            class="h-8 w-8 object-cover rounded bg-slate-800"
+                                        />
+                                        <span class="text-xs text-emerald-400"
+                                            >Image Selected</span
+                                        >
+                                        <button
+                                            @click.prevent="removeImage"
+                                            class="ml-auto p-1 text-rose-400 hover:text-rose-300 z-20"
+                                        >
+                                            <X class="w-4 h-4" />
+                                        </button>
+                                    </div>
+
+                                    <div
+                                        v-else
+                                        class="flex items-center gap-2 text-slate-500 pointer-events-none"
+                                    >
+                                        <UploadCloud class="w-4 h-4" />
+                                        <span class="text-xs">Upload</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -334,31 +346,29 @@
                                 v-model="form.content"
                                 rows="8"
                                 placeholder="Write your story..."
-                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all placeholder:text-slate-600 font-mono text-sm custom-scrollbar leading-relaxed"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-purple-500/50 transition-all placeholder:text-slate-600 font-mono text-sm custom-scrollbar leading-relaxed"
                             ></textarea>
                         </div>
                     </div>
 
                     <div
-                        class="p-6 border-t border-slate-800 bg-slate-900 flex justify-end gap-3"
+                        class="p-5 md:p-6 border-t border-slate-800 bg-slate-900 flex justify-end gap-3 shrink-0"
                     >
                         <button
                             @click="closeModal"
-                            class="px-5 py-2.5 rounded-xl font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+                            class="px-5 py-2.5 rounded-xl font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors text-sm"
                         >
                             Cancel
                         </button>
                         <button
                             @click="editMode ? updateBlog() : createBlog()"
-                            class="px-5 py-2.5 rounded-xl font-medium bg-purple-600 hover:bg-purple-500 text-white shadow-lg shadow-purple-600/20 transition-all flex items-center gap-2"
+                            class="w-full md:w-auto px-5 py-2.5 rounded-xl font-medium bg-purple-600 hover:bg-purple-500 text-white shadow-lg shadow-purple-600/20 transition-all flex justify-center items-center gap-2 text-sm"
                             :disabled="isSubmitting"
                         >
                             <span v-if="isSubmitting" class="animate-spin"
                                 >⌛</span
                             >
-                            {{
-                                editMode ? "Update Article" : "Publish Article"
-                            }}
+                            {{ editMode ? "Update" : "Publish" }}
                         </button>
                     </div>
                 </div>
@@ -398,7 +408,6 @@ const search = ref("");
 const loading = ref(false);
 const isSubmitting = ref(false);
 
-// New Image State
 const previewImage = ref(null);
 const selectedFile = ref(null);
 
@@ -408,14 +417,12 @@ const form = ref({
     title: "",
     slug: "",
     content: "",
-    thumbnail: "", // This will hold the URL string from DB
+    thumbnail: "",
     is_published: false,
 });
 
-// ✅ Helper to fix URL path (Backend /storage/.. to Full URL)
 const getThumbnailUrl = (path) => {
     if (!path) return null;
-    // যদি Full URL হয় তাহলে সেটাই রিটার্ন করো, নাহলে Backend URL বসাও
     return path.startsWith("http") ? path : `http://127.0.0.1:8000${path}`;
 };
 
@@ -462,14 +469,11 @@ onMounted(() => {
     loadCategories();
 });
 
-/* -----------------------------
-   📷 Image Upload Logic
------------------------------ */
 const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
         selectedFile.value = file;
-        previewImage.value = URL.createObjectURL(file); // Show preview
+        previewImage.value = URL.createObjectURL(file);
     }
 };
 
@@ -478,9 +482,6 @@ const removeImage = () => {
     previewImage.value = null;
 };
 
-/* -----------------------------
-   📝 Create Blog (FormData)
------------------------------ */
 const createBlog = async () => {
     isSubmitting.value = true;
     try {
@@ -489,16 +490,11 @@ const createBlog = async () => {
         formData.append("title", form.value.title);
         formData.append("slug", form.value.slug);
         formData.append("content", form.value.content);
-        // Boolean to 1/0 for Laravel
         formData.append("is_published", form.value.is_published ? "1" : "0");
-
-        // Append File if exists
-        if (selectedFile.value) {
+        if (selectedFile.value)
             formData.append("thumbnail", selectedFile.value);
-        }
 
         await api.post("/api/admin/blogs", formData);
-
         showModal.value = false;
         loadBlogs();
         toast.success("Blog created successfully!");
@@ -513,9 +509,6 @@ const createBlog = async () => {
     }
 };
 
-/* -----------------------------
-   🔄 Update Blog (FormData + _method: PUT)
------------------------------ */
 const updateBlog = async () => {
     isSubmitting.value = true;
     try {
@@ -525,16 +518,11 @@ const updateBlog = async () => {
         formData.append("slug", form.value.slug);
         formData.append("content", form.value.content);
         formData.append("is_published", form.value.is_published ? "1" : "0");
-
-        if (selectedFile.value) {
+        if (selectedFile.value)
             formData.append("thumbnail", selectedFile.value);
-        }
-
-        // ⚠️ TRICK: Laravel PUT file upload fix
         formData.append("_method", "PUT");
 
         await api.post(`/api/admin/blogs/${form.value.id}`, formData);
-
         showModal.value = false;
         loadBlogs();
         toast.success("Blog updated successfully!");
@@ -580,8 +568,8 @@ const confirmDelete = (id) => {
 const openCreateModal = () => {
     editMode.value = false;
     showModal.value = true;
-    selectedFile.value = null; // Reset File
-    previewImage.value = null; // Reset Preview
+    selectedFile.value = null;
+    previewImage.value = null;
     form.value = {
         id: null,
         category_id: "",
@@ -596,11 +584,8 @@ const openCreateModal = () => {
 const editBlog = (blog) => {
     editMode.value = true;
     showModal.value = true;
-    selectedFile.value = null; // Reset File
-
-    // Set existing image as preview
+    selectedFile.value = null;
     previewImage.value = getThumbnailUrl(blog.thumbnail);
-
     form.value = { ...blog };
 };
 

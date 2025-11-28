@@ -111,6 +111,7 @@ const showPassword = ref(false);
 const isLoading = ref(false);
 
 const handleLogin = async () => {
+    // Basic validation
     if (!email.value || !password.value) {
         toast.warning("Please enter both email and password.");
         return;
@@ -119,25 +120,27 @@ const handleLogin = async () => {
     isLoading.value = true;
 
     try {
+        // API Call
         const res = await api.post("/api/login", {
             email: email.value,
             password: password.value,
         });
 
-        // Extract Token & User
+        // Handle Response (Support different structures)
         const token = res.data.token || res.data.data?.token;
-        const user = res.data.user || res.data.data?.user; // ⚠️ Check API response structure
+        const user = res.data.user || res.data.data?.user;
 
         if (token) {
+            // Save Token
             localStorage.setItem("token", token);
 
-            // ✅ Save User Info for Sidebar/Topbar
+            // Save User Info (For Sidebar/Topbar)
             if (user) {
                 localStorage.setItem("admin_name", user.name);
                 localStorage.setItem("admin_email", user.email);
             } else {
-                // Fallback (If API doesn't return user object immediately)
-                // You can fetch profile here or just set email from input
+                // Fallback if user object isn't in immediate response
+                // It's better to rely on the API response, but this prevents blank UI
                 localStorage.setItem("admin_email", email.value);
             }
 

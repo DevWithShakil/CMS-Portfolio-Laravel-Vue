@@ -4,7 +4,9 @@
             class="flex flex-col md:flex-row md:items-center justify-between gap-4"
         >
             <div>
-                <h1 class="text-3xl font-bold text-white tracking-tight">
+                <h1
+                    class="text-2xl md:text-3xl font-bold text-white tracking-tight"
+                >
                     Inbox &
                     <span
                         class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400"
@@ -29,10 +31,10 @@
                     @input="loadContacts('/api/admin/contacts')"
                     type="text"
                     placeholder="Search by name or email..."
-                    class="w-full bg-slate-950 border border-slate-800 text-slate-200 text-sm rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all placeholder:text-slate-600"
+                    class="w-full bg-slate-950 border border-slate-800 text-slate-200 text-sm rounded-xl pl-10 pr-4 py-3 md:py-2.5 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all placeholder:text-slate-600"
                 />
             </div>
-            <div class="text-xs text-slate-500 font-medium">
+            <div class="hidden md:block text-xs text-slate-500 font-medium">
                 Total Messages:
                 <span class="text-cyan-400">{{
                     pagination.total || contacts.length
@@ -44,14 +46,20 @@
             <div
                 v-for="n in 5"
                 :key="n"
-                class="bg-slate-900 border border-slate-800 rounded-2xl p-5 animate-pulse flex items-center gap-4"
+                class="bg-slate-900 border border-slate-800 rounded-2xl p-5 animate-pulse flex flex-col md:flex-row items-start md:items-center gap-4"
             >
-                <div class="w-10 h-10 bg-slate-800 rounded-full shrink-0"></div>
-                <div class="flex-1 space-y-2">
-                    <div class="h-4 bg-slate-800 rounded w-1/4"></div>
-                    <div class="h-3 bg-slate-800 rounded w-1/2"></div>
+                <div class="flex items-center gap-4 w-full md:w-auto">
+                    <div
+                        class="w-10 h-10 bg-slate-800 rounded-full shrink-0"
+                    ></div>
+                    <div class="h-4 bg-slate-800 rounded w-32 md:hidden"></div>
                 </div>
-                <div class="h-8 w-20 bg-slate-800 rounded"></div>
+                <div class="flex-1 space-y-2 w-full">
+                    <div
+                        class="h-4 bg-slate-800 rounded w-1/4 hidden md:block"
+                    ></div>
+                    <div class="h-3 bg-slate-800 rounded w-full md:w-1/2"></div>
+                </div>
             </div>
         </div>
 
@@ -63,8 +71,9 @@
                 <div
                     v-for="c in contacts"
                     :key="c.id"
-                    class="group flex flex-col md:flex-row md:items-center gap-4 p-5 hover:bg-slate-800/40 transition-colors cursor-pointer relative"
+                    class="group flex flex-col md:flex-row md:items-center gap-4 p-4 md:p-5 hover:bg-slate-800/40 transition-colors cursor-pointer relative"
                     :class="!c.is_seen ? 'bg-slate-800/20' : ''"
+                    @click="openMessageModal(c)"
                 >
                     <div
                         v-if="!c.is_seen"
@@ -92,6 +101,12 @@
                                 {{ c.email }}
                             </p>
                         </div>
+                        <span
+                            class="ml-auto text-xs text-slate-600 md:hidden whitespace-nowrap"
+                            >{{
+                                new Date(c.created_at).toLocaleDateString()
+                            }}</span
+                        >
                     </div>
 
                     <div class="flex-1 min-w-0 md:px-4">
@@ -114,17 +129,17 @@
                     </div>
 
                     <div
-                        class="flex items-center justify-between md:justify-end gap-4 min-w-[140px]"
+                        class="flex items-center justify-between md:justify-end gap-4 min-w-[140px] mt-2 md:mt-0"
                     >
                         <span
-                            class="text-xs text-slate-600 whitespace-nowrap"
+                            class="hidden md:block text-xs text-slate-600 whitespace-nowrap"
                             >{{
                                 new Date(c.created_at).toLocaleDateString()
                             }}</span
                         >
 
                         <div
-                            class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                            class="flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity w-full md:w-auto justify-end"
                         >
                             <button
                                 v-if="!c.is_seen"
@@ -137,7 +152,7 @@
 
                             <button
                                 @click.stop="openMessageModal(c)"
-                                class="p-2 text-slate-400 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors"
+                                class="p-2 text-slate-400 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors hidden md:block"
                                 title="View"
                             >
                                 <Eye class="w-4 h-4" />
@@ -223,9 +238,9 @@
                     @click.stop
                 >
                     <div
-                        class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900"
+                        class="p-5 md:p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900 shrink-0"
                     >
-                        <h2 class="text-xl font-bold text-white">
+                        <h2 class="text-lg md:text-xl font-bold text-white">
                             Message Details
                         </h2>
                         <button
@@ -236,7 +251,9 @@
                         </button>
                     </div>
 
-                    <div class="p-8 overflow-y-auto custom-scrollbar space-y-6">
+                    <div
+                        class="p-5 md:p-8 overflow-y-auto custom-scrollbar space-y-6"
+                    >
                         <div class="flex items-center gap-4">
                             <div
                                 class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-lg font-bold text-slate-300 border border-slate-700"
@@ -245,17 +262,21 @@
                                     selectedMessage.name.charAt(0).toUpperCase()
                                 }}
                             </div>
-                            <div>
-                                <h3 class="text-lg font-bold text-white">
+                            <div class="min-w-0">
+                                <h3
+                                    class="text-lg font-bold text-white truncate"
+                                >
                                     {{ selectedMessage.name }}
                                 </h3>
                                 <a
                                     :href="`mailto:${selectedMessage.email}`"
-                                    class="text-sm text-cyan-400 hover:underline"
+                                    class="text-sm text-cyan-400 hover:underline truncate block"
                                     >{{ selectedMessage.email }}</a
                                 >
                             </div>
-                            <div class="ml-auto text-xs text-slate-500">
+                            <div
+                                class="ml-auto text-xs text-slate-500 hidden sm:block"
+                            >
                                 {{
                                     new Date(
                                         selectedMessage.created_at
@@ -264,11 +285,20 @@
                             </div>
                         </div>
 
+                        <div class="text-xs text-slate-500 sm:hidden">
+                            Sent:
+                            {{
+                                new Date(
+                                    selectedMessage.created_at
+                                ).toLocaleString()
+                            }}
+                        </div>
+
                         <div
-                            class="bg-slate-950 border border-slate-800 rounded-xl p-6"
+                            class="bg-slate-950 border border-slate-800 rounded-xl p-4 md:p-6"
                         >
                             <h4
-                                class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2"
+                                class="text-xs md:text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2"
                             >
                                 Subject
                             </h4>
@@ -277,12 +307,12 @@
                             </p>
 
                             <h4
-                                class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2"
+                                class="text-xs md:text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2"
                             >
                                 Message
                             </h4>
                             <p
-                                class="text-slate-300 leading-relaxed whitespace-pre-wrap"
+                                class="text-sm md:text-base text-slate-300 leading-relaxed whitespace-pre-wrap"
                             >
                                 {{ selectedMessage.message }}
                             </p>
@@ -290,17 +320,17 @@
                     </div>
 
                     <div
-                        class="p-6 border-t border-slate-800 bg-slate-900 flex justify-end gap-3"
+                        class="p-5 md:p-6 border-t border-slate-800 bg-slate-900 flex justify-end gap-3 shrink-0"
                     >
                         <button
                             @click="closeModal"
-                            class="px-5 py-2.5 rounded-xl font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+                            class="px-5 py-2.5 rounded-xl font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors text-sm"
                         >
                             Close
                         </button>
                         <a
                             :href="`mailto:${selectedMessage.email}`"
-                            class="px-5 py-2.5 rounded-xl font-medium bg-cyan-600 hover:bg-cyan-500 text-white shadow-lg shadow-cyan-600/20 transition-all flex items-center gap-2"
+                            class="px-5 py-2.5 rounded-xl font-medium bg-cyan-600 hover:bg-cyan-500 text-white shadow-lg shadow-cyan-600/20 transition-all flex items-center gap-2 text-sm"
                         >
                             <Reply class="w-4 h-4" /> Reply
                         </a>

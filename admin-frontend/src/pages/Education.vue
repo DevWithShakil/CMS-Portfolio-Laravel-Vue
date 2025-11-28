@@ -4,7 +4,9 @@
             class="flex flex-col md:flex-row md:items-center justify-between gap-4"
         >
             <div>
-                <h1 class="text-3xl font-bold text-white tracking-tight">
+                <h1
+                    class="text-2xl md:text-3xl font-bold text-white tracking-tight"
+                >
                     Academic
                     <span
                         class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400"
@@ -18,7 +20,7 @@
 
             <button
                 @click="openCreateModal"
-                class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg shadow-indigo-500/20 transition-all hover:-translate-y-0.5"
+                class="w-full md:w-auto flex justify-center items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg shadow-indigo-500/20 transition-all active:scale-95"
             >
                 <Plus class="w-5 h-5" />
                 <span>Add Education</span>
@@ -36,11 +38,11 @@
                     v-model="search"
                     @input="loadEducation('/api/admin/education')"
                     type="text"
-                    placeholder="Search degree..."
-                    class="w-full bg-slate-950 border border-slate-800 text-slate-200 text-sm rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder:text-slate-600"
+                    placeholder="Search degree or institution..."
+                    class="w-full bg-slate-950 border border-slate-800 text-slate-200 text-sm rounded-xl pl-10 pr-4 py-3 md:py-2.5 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder:text-slate-600"
                 />
             </div>
-            <div class="text-xs text-slate-500 font-medium">
+            <div class="hidden md:block text-xs text-slate-500 font-medium">
                 Qualifications:
                 <span class="text-indigo-400">{{
                     pagination.total || education.length
@@ -52,10 +54,10 @@
             <div
                 v-for="n in 4"
                 :key="n"
-                class="bg-slate-900 border border-slate-800 rounded-2xl p-6 animate-pulse flex gap-4"
+                class="bg-slate-900 border border-slate-800 rounded-2xl p-6 animate-pulse flex flex-col md:flex-row gap-4"
             >
                 <div class="w-14 h-14 bg-slate-800 rounded-xl shrink-0"></div>
-                <div class="flex-1 space-y-3">
+                <div class="flex-1 space-y-3 w-full">
                     <div class="h-5 bg-slate-800 rounded w-3/4"></div>
                     <div class="h-4 bg-slate-800 rounded w-1/2"></div>
                     <div class="h-10 bg-slate-800 rounded w-full"></div>
@@ -63,25 +65,29 @@
             </div>
         </div>
 
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
             <div
                 v-for="edu in education"
                 :key="edu.id"
-                class="group bg-slate-900 border border-slate-800 hover:border-indigo-500/30 rounded-2xl p-6 shadow-lg transition-all hover:-translate-y-1 relative overflow-hidden"
+                class="group bg-slate-900 border border-slate-800 hover:border-indigo-500/30 rounded-2xl p-5 md:p-6 shadow-lg transition-all hover:-translate-y-1 relative overflow-hidden"
             >
                 <GraduationCap
-                    class="absolute -bottom-4 -right-4 w-32 h-32 text-slate-800/50 transform rotate-12 group-hover:text-indigo-900/20 transition-colors pointer-events-none"
+                    class="hidden md:block absolute -bottom-4 -right-4 w-32 h-32 text-slate-800/50 transform rotate-12 group-hover:text-indigo-900/20 transition-colors pointer-events-none"
                 />
 
-                <div class="relative z-10 flex items-start gap-5">
+                <div
+                    class="relative z-10 flex flex-col sm:flex-row items-start gap-4 sm:gap-5"
+                >
                     <div
-                        class="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 border border-indigo-500/20 shrink-0 group-hover:scale-110 transition-transform"
+                        class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 border border-indigo-500/20 shrink-0 group-hover:scale-110 transition-transform"
                     >
-                        <School class="w-7 h-7" />
+                        <School class="w-6 h-6 sm:w-7 sm:h-7" />
                     </div>
 
-                    <div class="flex-1 min-w-0">
-                        <div class="flex justify-between items-start">
+                    <div class="flex-1 min-w-0 w-full">
+                        <div
+                            class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-0"
+                        >
                             <div>
                                 <h3
                                     class="text-lg font-bold text-white leading-tight group-hover:text-indigo-300 transition-colors"
@@ -96,7 +102,7 @@
                             </div>
 
                             <span
-                                class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 text-xs font-semibold text-indigo-300 border border-slate-700 whitespace-nowrap"
+                                class="self-start sm:self-auto inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 text-xs font-semibold text-indigo-300 border border-slate-700 whitespace-nowrap"
                             >
                                 <Calendar class="w-3 h-3" /> {{ edu.duration }}
                             </span>
@@ -109,24 +115,43 @@
                         </div>
 
                         <div
-                            class="mt-4 flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0"
+                            class="mt-4 flex gap-3 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity md:translate-y-2 md:group-hover:translate-y-0"
                         >
                             <button
                                 @click="editEducation(edu)"
-                                class="flex items-center gap-1.5 text-xs font-medium text-amber-400 hover:text-amber-300 transition-colors"
+                                class="flex items-center gap-1.5 px-3 py-1.5 md:px-0 md:py-0 rounded-lg bg-slate-800 md:bg-transparent text-xs font-medium text-amber-400 hover:text-amber-300 transition-colors"
                             >
                                 <Edit3 class="w-3.5 h-3.5" /> Edit
                             </button>
-                            <div class="w-px h-4 bg-slate-700"></div>
+                            <div
+                                class="hidden md:block w-px h-4 bg-slate-700"
+                            ></div>
                             <button
                                 @click="confirmDelete(edu.id)"
-                                class="flex items-center gap-1.5 text-xs font-medium text-rose-400 hover:text-rose-300 transition-colors"
+                                class="flex items-center gap-1.5 px-3 py-1.5 md:px-0 md:py-0 rounded-lg bg-slate-800 md:bg-transparent text-xs font-medium text-rose-400 hover:text-rose-300 transition-colors"
                             >
                                 <Trash2 class="w-3.5 h-3.5" /> Delete
                             </button>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div
+                v-if="!loading && education.length === 0"
+                class="col-span-full py-12 text-center border-2 border-dashed border-slate-800 rounded-2xl"
+            >
+                <div
+                    class="w-16 h-16 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-4"
+                >
+                    <GraduationCap class="w-8 h-8 text-slate-600" />
+                </div>
+                <h3 class="text-slate-300 font-medium">
+                    No education history found
+                </h3>
+                <p class="text-slate-500 text-sm mt-1">
+                    Add your degrees to showcase your background.
+                </p>
             </div>
         </div>
 
@@ -180,9 +205,9 @@
                     @click.stop
                 >
                     <div
-                        class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900"
+                        class="p-5 md:p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900 shrink-0"
                     >
-                        <h2 class="text-xl font-bold text-white">
+                        <h2 class="text-lg md:text-xl font-bold text-white">
                             {{ editMode ? "Edit Education" : "Add Education" }}
                         </h2>
                         <button
@@ -193,7 +218,9 @@
                         </button>
                     </div>
 
-                    <div class="p-6 overflow-y-auto custom-scrollbar space-y-5">
+                    <div
+                        class="p-5 md:p-6 overflow-y-auto custom-scrollbar space-y-5"
+                    >
                         <div class="space-y-1.5">
                             <label
                                 class="text-xs font-semibold text-slate-400 uppercase"
@@ -203,11 +230,11 @@
                                 v-model="form.degree"
                                 type="text"
                                 placeholder="e.g. BSc in Computer Science"
-                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder:text-slate-600"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 md:py-2.5 text-slate-200 text-sm focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder:text-slate-600"
                             />
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="space-y-1.5">
                                 <label
                                     class="text-xs font-semibold text-slate-400 uppercase"
@@ -221,25 +248,24 @@
                                         v-model="form.institution"
                                         type="text"
                                         placeholder="e.g. Harvard"
-                                        class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-slate-200 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder:text-slate-600"
+                                        class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 md:py-2.5 text-slate-200 text-sm focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder:text-slate-600"
                                     />
                                 </div>
                             </div>
                             <div class="space-y-1.5">
                                 <label
                                     class="text-xs font-semibold text-slate-400 uppercase"
-                                    >Passing Year / Duration</label
+                                    >Passing Year</label
                                 >
                                 <div class="relative">
                                     <Calendar
                                         class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"
                                     />
-
                                     <input
                                         v-model="form.duration"
                                         type="text"
                                         placeholder="e.g. 2019 - 2023"
-                                        class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-slate-200 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder:text-slate-600"
+                                        class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 md:py-2.5 text-slate-200 text-sm focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder:text-slate-600"
                                     />
                                 </div>
                             </div>
@@ -254,17 +280,17 @@
                                 v-model="form.description"
                                 rows="4"
                                 placeholder="Brief details about major, achievements..."
-                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder:text-slate-600 custom-scrollbar"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 md:py-2.5 text-slate-200 text-sm focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder:text-slate-600 custom-scrollbar"
                             ></textarea>
                         </div>
                     </div>
 
                     <div
-                        class="p-6 border-t border-slate-800 bg-slate-900 flex justify-end gap-3"
+                        class="p-5 md:p-6 border-t border-slate-800 bg-slate-900 flex justify-end gap-3 shrink-0"
                     >
                         <button
                             @click="closeModal"
-                            class="px-5 py-2.5 rounded-xl font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+                            class="px-5 py-2.5 rounded-xl font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors text-sm"
                         >
                             Cancel
                         </button>
@@ -272,7 +298,7 @@
                             @click="
                                 editMode ? updateEducation() : createEducation()
                             "
-                            class="px-5 py-2.5 rounded-xl font-medium bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 transition-all"
+                            class="w-full md:w-auto px-5 py-2.5 rounded-xl font-medium bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 transition-all text-sm flex justify-center"
                         >
                             {{ editMode ? "Update" : "Add" }}
                         </button>
@@ -309,7 +335,6 @@ const editMode = ref(false);
 const search = ref("");
 const loading = ref(false);
 
-// ✅ ফিক্স: 'year' এর বদলে 'duration' ব্যবহার করা হয়েছে
 const form = ref({
     id: null,
     degree: "",
@@ -353,7 +378,6 @@ const createEducation = async () => {
         loadEducation();
         toast.success("Education created!");
     } catch (err) {
-        // Error handling
         if (err.response && err.response.status === 422) {
             toast.error(Object.values(err.response.data.errors)[0][0]);
         } else {
@@ -376,7 +400,6 @@ const updateEducation = async () => {
 const confirmDelete = (id) => {
     Swal.fire({
         title: "Delete?",
-        text: "This action cannot be undone.",
         icon: "warning",
         background: "#1e293b",
         color: "#fff",
@@ -396,7 +419,6 @@ const confirmDelete = (id) => {
 const openCreateModal = () => {
     editMode.value = false;
     showModal.value = true;
-    // ✅ ফিক্স: 'duration' সেট করা হয়েছে
     form.value = {
         id: null,
         degree: "",
