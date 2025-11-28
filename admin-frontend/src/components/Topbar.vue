@@ -1,22 +1,24 @@
 <template>
     <header
-        class="sticky top-0 z-40 w-full bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all duration-300"
+        class="sticky top-0 z-40 w-full bg-slate-900/80 backdrop-blur-md border-b border-slate-800/60 shadow-sm transition-all duration-300"
     >
-        <div class="flex items-center justify-between h-16 px-6">
+        <div class="flex items-center justify-between h-20 px-6">
             <div class="flex items-center gap-4">
                 <button
-                    class="lg:hidden p-2 text-slate-500 hover:text-slate-700"
+                    class="lg:hidden p-2 text-slate-400 hover:text-white transition-colors"
                 >
                     <Menu class="w-6 h-6" />
                 </button>
 
                 <div>
                     <h1
-                        class="text-xl font-bold text-slate-800 capitalize tracking-tight"
+                        class="text-xl font-bold text-white capitalize tracking-wide flex items-center gap-2"
                     >
                         {{ currentRouteName }}
                     </h1>
-                    <p class="text-xs text-slate-500 hidden sm:block">
+                    <p
+                        class="text-xs text-slate-500 hidden sm:block font-medium"
+                    >
                         Welcome back, Admin
                     </p>
                 </div>
@@ -24,97 +26,122 @@
 
             <div class="flex items-center gap-4">
                 <div
-                    class="hidden md:flex items-center bg-slate-100 rounded-full px-4 py-2 border border-slate-200 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all"
+                    class="hidden md:flex items-center bg-slate-800/50 rounded-xl px-4 py-2.5 border border-slate-700/50 focus-within:ring-2 focus-within:ring-blue-500/50 focus-within:border-blue-500/50 transition-all shadow-inner"
                 >
                     <Search class="w-4 h-4 text-slate-400" />
                     <input
                         type="text"
                         placeholder="Search..."
-                        class="bg-transparent border-none text-sm ml-2 w-48 focus:outline-none text-slate-600 placeholder:text-slate-400"
+                        class="bg-transparent border-none text-sm ml-3 w-48 focus:outline-none text-slate-200 placeholder:text-slate-500"
                     />
                 </div>
 
                 <button
-                    class="relative p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors"
+                    class="relative p-2.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-all duration-300 group"
                 >
-                    <Bell class="w-5 h-5" />
+                    <Bell class="w-5 h-5 group-hover:animate-swing" />
                     <span
-                        class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"
+                        class="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full shadow-[0_0_8px_rgba(244,63,94,0.6)] animate-pulse"
                     ></span>
                 </button>
 
-                <div class="h-8 w-px bg-slate-200 mx-1"></div>
+                <div class="h-8 w-px bg-slate-800 mx-2"></div>
 
                 <div class="relative" ref="dropdownRef">
                     <button
                         @click="toggleDropdown"
-                        class="flex items-center gap-3 p-1 rounded-full hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200"
+                        class="flex items-center gap-3 p-1.5 rounded-full hover:bg-slate-800/50 transition-all border border-transparent hover:border-slate-700/50 group"
                     >
-                        <img
-                            src="https://ui-avatars.com/api/?name=Admin+User&background=0D8ABC&color=fff"
-                            alt="Avatar"
-                            class="w-9 h-9 rounded-full object-cover shadow-sm"
-                        />
+                        <div class="relative">
+                            <img
+                                src="https://ui-avatars.com/api/?name=Admin+User&background=0f172a&color=cbd5e1"
+                                alt="Avatar"
+                                class="w-10 h-10 rounded-full object-cover border-2 border-slate-700 group-hover:border-blue-500 transition-colors"
+                            />
+                            <div
+                                class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-slate-900 rounded-full"
+                            ></div>
+                        </div>
 
                         <div class="hidden md:flex flex-col items-start pr-2">
                             <span
-                                class="text-sm font-semibold text-slate-700 leading-none"
+                                class="text-sm font-bold text-slate-200 leading-none group-hover:text-white transition-colors"
                                 >Admin</span
                             >
-                            <span class="text-[10px] text-slate-500 font-medium"
+                            <span
+                                class="text-[10px] text-slate-500 font-medium mt-1 group-hover:text-blue-400 transition-colors"
                                 >Super Admin</span
                             >
                         </div>
 
                         <ChevronDown
-                            class="w-4 h-4 text-slate-400 hidden md:block"
+                            class="w-4 h-4 text-slate-500 group-hover:text-white transition-colors hidden md:block"
                         />
                     </button>
 
                     <transition
                         enter-active-class="transition ease-out duration-200"
-                        enter-from-class="transform opacity-0 scale-95"
-                        enter-to-class="transform opacity-100 scale-100"
-                        leave-active-class="transition ease-in duration-75"
-                        leave-from-class="transform opacity-100 scale-100"
-                        leave-to-class="transform opacity-0 scale-95"
+                        enter-from-class="transform opacity-0 scale-95 translate-y-2"
+                        enter-to-class="transform opacity-100 scale-100 translate-y-0"
+                        leave-active-class="transition ease-in duration-150"
+                        leave-from-class="transform opacity-100 scale-100 translate-y-0"
+                        leave-to-class="transform opacity-0 scale-95 translate-y-2"
                     >
                         <div
                             v-if="isDropdownOpen"
-                            class="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-xl border border-slate-100 py-2 origin-top-right ring-1 ring-black ring-opacity-5 focus:outline-none"
+                            class="absolute right-0 mt-3 w-60 bg-slate-900 rounded-xl shadow-2xl border border-slate-800 py-2 origin-top-right ring-1 ring-white/5 focus:outline-none z-50"
                         >
                             <div
-                                class="px-4 py-3 border-b border-slate-100 mb-2"
+                                class="px-5 py-3 border-b border-slate-800 mb-2"
                             >
-                                <p class="text-sm font-medium text-slate-900">
+                                <p
+                                    class="text-xs font-medium text-slate-400 uppercase tracking-wider"
+                                >
                                     Signed in as
                                 </p>
-                                <p class="text-xs text-slate-500 truncate">
+                                <p
+                                    class="text-sm font-bold text-white truncate mt-1"
+                                >
                                     admin@example.com
                                 </p>
                             </div>
 
-                            <a
-                                href="/admin/settings"
-                                class="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors"
-                            >
-                                <User class="w-4 h-4 mr-3" /> Profile
-                            </a>
-                            <a
-                                href="/admin/settings"
-                                class="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors"
-                            >
-                                <Settings class="w-4 h-4 mr-3" /> Settings
-                            </a>
+                            <div class="px-2 space-y-1">
+                                <a
+                                    href="/admin/settings"
+                                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 rounded-lg hover:bg-slate-800 hover:text-white transition-colors group"
+                                >
+                                    <User
+                                        class="w-4 h-4 mr-3 text-slate-500 group-hover:text-blue-400 transition-colors"
+                                    />
+                                    Profile
+                                </a>
+                                <a
+                                    href="/admin/settings"
+                                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 rounded-lg hover:bg-slate-800 hover:text-white transition-colors group"
+                                >
+                                    <Settings
+                                        class="w-4 h-4 mr-3 text-slate-500 group-hover:text-blue-400 transition-colors"
+                                    />
+                                    Settings
+                                </a>
+                            </div>
 
-                            <div class="border-t border-slate-100 my-2"></div>
+                            <div
+                                class="border-t border-slate-800 my-2 mx-2"
+                            ></div>
 
-                            <button
-                                @click="logout"
-                                class="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                            >
-                                <LogOut class="w-4 h-4 mr-3" /> Sign out
-                            </button>
+                            <div class="px-2">
+                                <button
+                                    @click="logout"
+                                    class="w-full flex items-center px-3 py-2 text-sm font-bold text-rose-400 rounded-lg hover:bg-rose-500/10 hover:text-rose-300 transition-colors group"
+                                >
+                                    <LogOut
+                                        class="w-4 h-4 mr-3 group-hover:animate-pulse"
+                                    />
+                                    Sign out
+                                </button>
+                            </div>
                         </div>
                     </transition>
                 </div>
@@ -145,7 +172,7 @@ const route = useRoute();
 const isDropdownOpen = ref(false);
 const dropdownRef = ref(null);
 
-// Get current route name for the header title
+// Get current route name
 const currentRouteName = computed(() => {
     return route.name ? route.name.toString().replace("-", " ") : "Dashboard";
 });
@@ -171,21 +198,37 @@ onUnmounted(() => {
 
 const logout = async () => {
     try {
-        // Optional: Call backend logout API
-        // await api.post("/api/admin/logout");
-
         localStorage.removeItem("token");
-        toast.success("See you again soon!", {
-            timeout: 2000,
-        });
-
-        // Push to login
+        toast.success("See you again soon!", { timeout: 2000 });
         router.push("/");
     } catch (error) {
-        // Force logout even if API fails (good UX)
         localStorage.removeItem("token");
         router.push("/");
-        toast.error("Logout failed, but you were signed out locally.");
+        toast.error("Logged out locally.");
     }
 };
 </script>
+
+<style scoped>
+@keyframes swing {
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+    20% {
+        transform: rotate(15deg);
+    }
+    40% {
+        transform: rotate(-10deg);
+    }
+    60% {
+        transform: rotate(5deg);
+    }
+    80% {
+        transform: rotate(-5deg);
+    }
+}
+.animate-swing {
+    animation: swing 0.5s ease-in-out;
+}
+</style>

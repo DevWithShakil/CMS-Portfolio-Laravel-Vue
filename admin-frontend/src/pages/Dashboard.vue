@@ -1,252 +1,366 @@
 <template>
-    <div class="space-y-6">
+    <div
+        class="min-h-screen bg-slate-950 text-slate-200 p-6 space-y-8 relative overflow-hidden"
+    >
         <div
-            class="flex flex-col md:flex-row md:items-center justify-between gap-4"
+            class="absolute top-0 left-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[100px] pointer-events-none"
+        ></div>
+        <div
+            class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[100px] pointer-events-none"
+        ></div>
+
+        <div
+            class="relative z-10 flex flex-col md:flex-row items-start md:items-end justify-between gap-4"
         >
             <div>
-                <h1 class="text-2xl font-bold text-slate-800 tracking-tight">
+                <h1
+                    class="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 tracking-tight mb-2"
+                >
                     Dashboard Overview
                 </h1>
-                <p class="text-sm text-slate-500 mt-1">
-                    Welcome back! Here's what's happening with your portfolio
-                    today.
+                <p class="text-slate-400">
+                    Welcome back, Admin! You have
+                    <span class="text-white font-semibold"
+                        >{{ stats.unreadContacts }} new messages</span
+                    >
+                    and pending tasks.
                 </p>
             </div>
-            <div class="flex items-center gap-2">
-                <span
-                    class="text-xs font-medium text-slate-500 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm"
-                >
-                    {{
-                        new Date().toLocaleDateString("en-US", {
-                            weekday: "long",
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                        })
-                    }}
-                </span>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            <div
-                class="bg-white p-5 rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-100 flex items-center justify-between transition-transform hover:-translate-y-1"
-            >
-                <div>
-                    <p
-                        class="text-xs font-semibold text-slate-400 uppercase tracking-wider"
-                    >
-                        Total Projects
-                    </p>
-                    <h3 class="text-2xl font-bold text-slate-800 mt-1">
-                        {{ stats.projects }}
-                    </h3>
-                </div>
-                <div
-                    class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600"
-                >
-                    <Briefcase class="w-6 h-6" />
-                </div>
-            </div>
 
             <div
-                class="bg-white p-5 rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-100 flex items-center justify-between transition-transform hover:-translate-y-1"
+                class="bg-slate-900/50 backdrop-blur-md border border-slate-800 px-4 py-2 rounded-xl flex items-center gap-3 shadow-lg"
             >
+                <div class="p-2 bg-blue-500/20 rounded-lg text-blue-400">
+                    <Calendar class="w-5 h-5" />
+                </div>
                 <div>
-                    <p
-                        class="text-xs font-semibold text-slate-400 uppercase tracking-wider"
-                    >
-                        Total Skills
+                    <p class="text-xs text-slate-400 uppercase font-semibold">
+                        Today
                     </p>
-                    <h3 class="text-2xl font-bold text-slate-800 mt-1">
-                        {{ stats.skills }}
-                    </h3>
-                </div>
-                <div
-                    class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600"
-                >
-                    <Award class="w-6 h-6" />
-                </div>
-            </div>
-
-            <div
-                class="bg-white p-5 rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-100 flex items-center justify-between transition-transform hover:-translate-y-1 relative overflow-hidden"
-            >
-                <div>
-                    <p
-                        class="text-xs font-semibold text-slate-400 uppercase tracking-wider"
-                    >
-                        Unread Messages
+                    <p class="text-sm font-medium text-white">
+                        {{
+                            new Date().toLocaleDateString("en-US", {
+                                weekday: "short",
+                                day: "numeric",
+                                month: "long",
+                            })
+                        }}
                     </p>
-                    <h3 class="text-2xl font-bold text-slate-800 mt-1">
-                        {{ stats.unreadContacts }}
-                    </h3>
-                </div>
-                <div
-                    class="w-12 h-12 rounded-xl bg-rose-50 flex items-center justify-center text-rose-600"
-                >
-                    <Mail class="w-6 h-6" />
-                </div>
-                <span
-                    v-if="stats.unreadContacts > 0"
-                    class="absolute top-4 right-4 w-2 h-2 rounded-full bg-rose-500 animate-pulse"
-                ></span>
-            </div>
-
-            <div
-                class="bg-white p-5 rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-100 flex items-center justify-between transition-transform hover:-translate-y-1"
-            >
-                <div>
-                    <p
-                        class="text-xs font-semibold text-slate-400 uppercase tracking-wider"
-                    >
-                        Published Blogs
-                    </p>
-                    <h3 class="text-2xl font-bold text-slate-800 mt-1">
-                        {{ stats.publishedBlogs }}
-                    </h3>
-                </div>
-                <div
-                    class="w-12 h-12 rounded-xl bg-violet-50 flex items-center justify-center text-violet-600"
-                >
-                    <FileText class="w-6 h-6" />
                 </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10"
+        >
             <div
-                class="xl:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col"
+                class="group bg-slate-900 border border-slate-800 hover:border-blue-500/50 p-6 rounded-2xl shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden"
             >
                 <div
-                    class="p-5 border-b border-slate-100 flex items-center justify-between"
-                >
-                    <h2
-                        class="font-bold text-slate-800 flex items-center gap-2"
+                    class="absolute right-[-20px] top-[-20px] w-24 h-24 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all"
+                ></div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-medium text-slate-400">
+                            Total Projects
+                        </p>
+                        <h3 class="text-3xl font-bold text-white mt-2">
+                            {{ stats.projects }}
+                        </h3>
+                        <div
+                            class="flex items-center gap-1 mt-2 text-xs text-emerald-400"
+                        >
+                            <TrendingUp class="w-3 h-3" />
+                            <span>Active Portfolio</span>
+                        </div>
+                    </div>
+                    <div
+                        class="p-3 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/10 text-blue-400 border border-blue-500/20"
                     >
-                        <MessageSquare class="w-4 h-4 text-blue-500" /> Recent
-                        Messages
-                    </h2>
+                        <Briefcase class="w-6 h-6" />
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="group bg-slate-900 border border-slate-800 hover:border-emerald-500/50 p-6 rounded-2xl shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden"
+            >
+                <div
+                    class="absolute right-[-20px] top-[-20px] w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all"
+                ></div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-medium text-slate-400">
+                            Skills Acquired
+                        </p>
+                        <h3 class="text-3xl font-bold text-white mt-2">
+                            {{ stats.skills }}
+                        </h3>
+                        <div
+                            class="flex items-center gap-1 mt-2 text-xs text-slate-500"
+                        >
+                            <span>Tech Stack Count</span>
+                        </div>
+                    </div>
+                    <div
+                        class="p-3 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 text-emerald-400 border border-emerald-500/20"
+                    >
+                        <Award class="w-6 h-6" />
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="group bg-slate-900 border border-slate-800 hover:border-rose-500/50 p-6 rounded-2xl shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden"
+            >
+                <div
+                    class="absolute right-[-20px] top-[-20px] w-24 h-24 bg-rose-500/10 rounded-full blur-2xl group-hover:bg-rose-500/20 transition-all"
+                ></div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-medium text-slate-400">
+                            Unread Messages
+                        </p>
+                        <h3 class="text-3xl font-bold text-white mt-2">
+                            {{ stats.unreadContacts }}
+                        </h3>
+                        <div
+                            class="flex items-center gap-1 mt-2 text-xs"
+                            :class="
+                                stats.unreadContacts > 0
+                                    ? 'text-rose-400'
+                                    : 'text-slate-500'
+                            "
+                        >
+                            <span v-if="stats.unreadContacts > 0"
+                                >Needs Attention</span
+                            >
+                            <span v-else>All caught up</span>
+                        </div>
+                    </div>
+                    <div
+                        class="p-3 rounded-xl bg-gradient-to-br from-rose-500/20 to-rose-600/10 text-rose-400 border border-rose-500/20 relative"
+                    >
+                        <Mail class="w-6 h-6" />
+                        <span
+                            v-if="stats.unreadContacts > 0"
+                            class="absolute top-0 right-0 w-3 h-3 bg-rose-500 border-2 border-slate-900 rounded-full"
+                        ></span>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="group bg-slate-900 border border-slate-800 hover:border-purple-500/50 p-6 rounded-2xl shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden"
+            >
+                <div
+                    class="absolute right-[-20px] top-[-20px] w-24 h-24 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition-all"
+                ></div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-medium text-slate-400">
+                            Published Blogs
+                        </p>
+                        <h3 class="text-3xl font-bold text-white mt-2">
+                            {{ stats.publishedBlogs }}
+                        </h3>
+                        <div
+                            class="flex items-center gap-1 mt-2 text-xs text-purple-400"
+                        >
+                            <TrendingUp class="w-3 h-3" />
+                            <span>Content Growth</span>
+                        </div>
+                    </div>
+                    <div
+                        class="p-3 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-600/10 text-purple-400 border border-purple-500/20"
+                    >
+                        <FileText class="w-6 h-6" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 relative z-10">
+            <div class="xl:col-span-2 space-y-8">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <button
-                        @click="loadRecentContacts"
-                        class="p-2 hover:bg-slate-50 rounded-lg text-slate-400 hover:text-blue-600 transition-colors"
+                        class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col items-center justify-center gap-2 hover:bg-slate-800 hover:border-blue-500/30 transition-all group"
                     >
-                        <RefreshCw
-                            class="w-4 h-4"
-                            :class="{ 'animate-spin': contactsLoading }"
-                        />
+                        <div
+                            class="p-2 rounded-full bg-blue-500/10 text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors"
+                        >
+                            <Plus class="w-5 h-5" />
+                        </div>
+                        <span
+                            class="text-xs font-medium text-slate-400 group-hover:text-white"
+                            >New Project</span
+                        >
+                    </button>
+                    <button
+                        class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col items-center justify-center gap-2 hover:bg-slate-800 hover:border-purple-500/30 transition-all group"
+                    >
+                        <div
+                            class="p-2 rounded-full bg-purple-500/10 text-purple-400 group-hover:bg-purple-500 group-hover:text-white transition-colors"
+                        >
+                            <PenTool class="w-5 h-5" />
+                        </div>
+                        <span
+                            class="text-xs font-medium text-slate-400 group-hover:text-white"
+                            >Write Blog</span
+                        >
+                    </button>
+                    <button
+                        class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col items-center justify-center gap-2 hover:bg-slate-800 hover:border-emerald-500/30 transition-all group"
+                    >
+                        <div
+                            class="p-2 rounded-full bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-colors"
+                        >
+                            <Award class="w-5 h-5" />
+                        </div>
+                        <span
+                            class="text-xs font-medium text-slate-400 group-hover:text-white"
+                            >Add Skill</span
+                        >
+                    </button>
+                    <button
+                        class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col items-center justify-center gap-2 hover:bg-slate-800 hover:border-rose-500/30 transition-all group"
+                    >
+                        <div
+                            class="p-2 rounded-full bg-rose-500/10 text-rose-400 group-hover:bg-rose-500 group-hover:text-white transition-colors"
+                        >
+                            <User class="w-5 h-5" />
+                        </div>
+                        <span
+                            class="text-xs font-medium text-slate-400 group-hover:text-white"
+                            >Profile</span
+                        >
                     </button>
                 </div>
 
-                <div v-if="contactsLoading" class="p-5 space-y-4">
+                <div
+                    class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-lg"
+                >
                     <div
-                        v-for="i in 3"
-                        :key="i"
-                        class="h-16 bg-slate-50 rounded-lg animate-pulse w-full"
-                    ></div>
-                </div>
+                        class="p-6 border-b border-slate-800 flex justify-between items-center"
+                    >
+                        <h3
+                            class="text-lg font-bold text-white flex items-center gap-2"
+                        >
+                            <MessageSquare class="w-5 h-5 text-blue-500" />
+                            Recent Inquiries
+                        </h3>
+                        <button
+                            @click="loadRecentContacts"
+                            class="text-slate-400 hover:text-white transition-colors"
+                        >
+                            <RefreshCw
+                                class="w-4 h-4"
+                                :class="{ 'animate-spin': contactsLoading }"
+                            />
+                        </button>
+                    </div>
 
-                <div v-else class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr
-                                class="text-xs font-semibold text-slate-400 uppercase bg-slate-50/50 border-b border-slate-100"
+                    <div v-if="contactsLoading" class="p-6 space-y-4">
+                        <div
+                            v-for="i in 3"
+                            :key="i"
+                            class="h-16 bg-slate-800/50 rounded-xl animate-pulse"
+                        ></div>
+                    </div>
+
+                    <div v-else class="divide-y divide-slate-800">
+                        <div
+                            v-for="c in recentContacts"
+                            :key="c.id"
+                            class="p-4 flex items-center gap-4 hover:bg-slate-800/50 transition-colors group"
+                        >
+                            <div
+                                class="w-10 h-10 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center text-slate-300 font-bold border border-slate-700"
                             >
-                                <th class="px-5 py-3">User</th>
-                                <th class="px-5 py-3">Subject</th>
-                                <th class="px-5 py-3">Status</th>
-                                <th class="px-5 py-3 text-right">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100">
-                            <tr
-                                v-for="c in recentContacts"
-                                :key="c.id"
-                                class="hover:bg-slate-50/80 transition-colors group"
-                            >
-                                <td class="px-5 py-3">
-                                    <div
-                                        class="font-medium text-slate-800 text-sm"
+                                {{ c.name.charAt(0).toUpperCase() }}
+                            </div>
+
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between mb-1">
+                                    <h4
+                                        class="text-sm font-semibold text-white truncate"
                                     >
                                         {{ c.name }}
-                                    </div>
-                                    <div class="text-xs text-slate-400">
-                                        {{
-                                            new Date(
-                                                c.created_at
-                                            ).toLocaleDateString()
-                                        }}
-                                    </div>
-                                </td>
-                                <td
-                                    class="px-5 py-3 text-sm text-slate-600 truncate max-w-[150px]"
-                                >
+                                    </h4>
+                                    <span class="text-xs text-slate-500">{{
+                                        new Date(
+                                            c.created_at
+                                        ).toLocaleDateString()
+                                    }}</span>
+                                </div>
+                                <p class="text-sm text-slate-400 truncate">
                                     {{ c.subject }}
-                                </td>
-                                <td class="px-5 py-3">
-                                    <span
-                                        v-if="c.is_seen"
-                                        class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600"
-                                    >
-                                        Seen
-                                    </span>
-                                    <span
-                                        v-else
-                                        class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-600 border border-blue-100"
-                                    >
-                                        New
-                                    </span>
-                                </td>
-                                <td class="px-5 py-3 text-right">
-                                    <div
-                                        class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                                    >
-                                        <button
-                                            v-if="!c.is_seen"
-                                            @click="markSeen(c)"
-                                            title="Mark as Read"
-                                            class="p-1.5 text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100"
-                                        >
-                                            <CheckCircle class="w-4 h-4" />
-                                        </button>
-                                        <button
-                                            @click="deleteContact(c.id)"
-                                            title="Delete"
-                                            class="p-1.5 text-red-600 bg-red-50 rounded-md hover:bg-red-100"
-                                        >
-                                            <Trash2 class="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr v-if="recentContacts.length === 0">
-                                <td
-                                    colspan="4"
-                                    class="px-5 py-8 text-center text-slate-400 text-sm"
+                                </p>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <span
+                                    v-if="!c.is_seen"
+                                    class="px-2 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold uppercase rounded border border-blue-500/20"
+                                    >New</span
                                 >
-                                    No new messages found.
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+
+                                <div
+                                    class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity translate-x-4 group-hover:translate-x-0 duration-300"
+                                >
+                                    <button
+                                        v-if="!c.is_seen"
+                                        @click="markSeen(c)"
+                                        class="p-2 bg-slate-800 hover:bg-emerald-500/20 text-slate-400 hover:text-emerald-400 rounded-lg transition-colors"
+                                        title="Mark Seen"
+                                    >
+                                        <CheckCircle class="w-4 h-4" />
+                                    </button>
+                                    <button
+                                        @click="deleteContact(c.id)"
+                                        class="p-2 bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 rounded-lg transition-colors"
+                                        title="Delete"
+                                    >
+                                        <Trash2 class="w-4 h-4" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            v-if="recentContacts.length === 0"
+                            class="p-8 text-center text-slate-500"
+                        >
+                            No recent messages found.
+                        </div>
+                    </div>
+                    <div
+                        class="p-4 border-t border-slate-800 bg-slate-900/50 text-center"
+                    >
+                        <router-link
+                            to="/admin/contacts"
+                            class="text-xs font-medium text-slate-400 hover:text-white hover:underline"
+                            >View All Messages</router-link
+                        >
+                    </div>
                 </div>
             </div>
 
             <div
-                class="bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col h-full"
+                class="bg-slate-900 border border-slate-800 rounded-2xl flex flex-col shadow-lg h-fit"
             >
                 <div
-                    class="p-5 border-b border-slate-100 flex items-center justify-between"
+                    class="p-6 border-b border-slate-800 flex justify-between items-center"
                 >
-                    <h2
-                        class="font-bold text-slate-800 flex items-center gap-2"
+                    <h3
+                        class="text-lg font-bold text-white flex items-center gap-2"
                     >
-                        <Layers class="w-4 h-4 text-purple-500" /> Latest
+                        <Layers class="w-5 h-5 text-purple-500" /> Latest
                         Projects
-                    </h2>
+                    </h3>
                     <button
                         @click="loadLatestProjects"
-                        class="p-2 hover:bg-slate-50 rounded-lg text-slate-400 hover:text-blue-600 transition-colors"
+                        class="text-slate-400 hover:text-white transition-colors"
                     >
                         <RefreshCw
                             class="w-4 h-4"
@@ -255,73 +369,73 @@
                     </button>
                 </div>
 
-                <div v-if="projectsLoading" class="p-5 space-y-4">
-                    <div v-for="i in 4" :key="i" class="flex gap-3">
-                        <div
-                            class="w-12 h-12 bg-slate-100 rounded-lg animate-pulse"
-                        ></div>
-                        <div class="flex-1 space-y-2">
-                            <div
-                                class="h-4 bg-slate-100 rounded w-3/4 animate-pulse"
-                            ></div>
-                            <div
-                                class="h-3 bg-slate-100 rounded w-1/2 animate-pulse"
-                            ></div>
-                        </div>
-                    </div>
+                <div v-if="projectsLoading" class="p-6 grid gap-4">
+                    <div
+                        v-for="i in 3"
+                        :key="i"
+                        class="h-24 bg-slate-800/50 rounded-xl animate-pulse"
+                    ></div>
                 </div>
 
-                <div v-else class="p-5 space-y-4">
+                <div v-else class="p-4 space-y-4">
                     <div
                         v-for="p in latestProjects"
                         :key="p.id"
-                        class="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-100 transition-all cursor-pointer"
+                        class="group bg-slate-800/30 hover:bg-slate-800 border border-slate-700/50 hover:border-purple-500/30 rounded-xl p-3 transition-all cursor-pointer"
                     >
-                        <div
-                            class="w-12 h-12 shrink-0 rounded-lg bg-slate-100 overflow-hidden border border-slate-200"
-                        >
-                            <img
-                                v-if="p.thumbnail"
-                                :src="p.thumbnail"
-                                class="w-full h-full object-cover"
-                                alt="Project"
-                            />
+                        <div class="flex gap-4">
                             <div
-                                v-else
-                                class="w-full h-full flex items-center justify-center text-slate-300"
+                                class="w-16 h-16 rounded-lg bg-slate-700 overflow-hidden shrink-0 border border-slate-600 relative"
                             >
-                                <Image class="w-5 h-5" />
+                                <img
+                                    v-if="p.thumbnail"
+                                    :src="p.thumbnail"
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    alt="Project"
+                                />
+                                <div
+                                    v-else
+                                    class="w-full h-full flex items-center justify-center text-slate-500"
+                                >
+                                    <Image class="w-6 h-6" />
+                                </div>
+                            </div>
+
+                            <div class="flex-1 min-w-0 py-1">
+                                <h4
+                                    class="text-sm font-bold text-white truncate group-hover:text-purple-400 transition-colors"
+                                >
+                                    {{ p.title }}
+                                </h4>
+                                <p class="text-xs text-slate-500 truncate mt-1">
+                                    {{ p.tech_stack }}
+                                </p>
+
+                                <div
+                                    class="w-full h-1 bg-slate-700 rounded-full mt-3 overflow-hidden"
+                                >
+                                    <div
+                                        class="h-full bg-purple-500 w-3/4 rounded-full opacity-50 group-hover:opacity-100 transition-opacity"
+                                    ></div>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="flex-1 min-w-0">
-                            <h4
-                                class="text-sm font-semibold text-slate-800 truncate"
-                            >
-                                {{ p.title }}
-                            </h4>
-                            <p class="text-xs text-slate-500 truncate mt-0.5">
-                                {{ p.tech_stack }}
-                            </p>
-                        </div>
-
-                        <ChevronRight class="w-4 h-4 text-slate-300 mt-2" />
                     </div>
 
                     <div
                         v-if="latestProjects.length === 0"
-                        class="text-center py-6 text-slate-400 text-sm"
+                        class="p-8 text-center text-slate-500"
                     >
                         No projects added yet.
                     </div>
                 </div>
 
-                <div class="mt-auto p-4 border-t border-slate-100">
+                <div class="mt-auto p-4 border-t border-slate-800">
                     <router-link
                         to="/admin/projects"
-                        class="block w-full py-2 text-center text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                        class="block w-full py-3 text-center text-sm font-bold text-white bg-slate-800 hover:bg-slate-700 rounded-xl transition-colors"
                     >
-                        View All Projects
+                        Manage Projects
                     </router-link>
                 </div>
             </div>
@@ -335,7 +449,7 @@ import { useToast } from "vue-toastification";
 import Swal from "sweetalert2";
 import api from "../services/api";
 
-// Import Icons (Ensure you installed lucide-vue-next)
+// Import Icons
 import {
     Briefcase,
     Award,
@@ -348,6 +462,11 @@ import {
     Trash2,
     Image,
     ChevronRight,
+    TrendingUp,
+    Calendar,
+    Plus,
+    PenTool,
+    User,
 } from "lucide-vue-next";
 
 const toast = useToast();
@@ -391,20 +510,16 @@ const loadStats = async () => {
             api.get(normalizeUrl("/api/admin/blogs")),
         ]);
 
-        // Projects
         stats.value.projects = Array.isArray(pr.data)
             ? pr.data.length
             : pr.data?.data?.length ?? 0;
-        // Skills
         stats.value.skills = Array.isArray(sk.data)
             ? sk.data.length
             : sk.data?.data?.length ?? 0;
-        // Experiences
         stats.value.experiences = Array.isArray(ex.data)
             ? ex.data.length
             : ex.data?.data?.length ?? 0;
 
-        // Unread Contacts
         const allContacts = Array.isArray(co.data)
             ? co.data
             : co.data?.data ?? [];
@@ -412,14 +527,12 @@ const loadStats = async () => {
             (c) => !c.is_seen
         ).length;
 
-        // Published Blogs
         const allBlogs = Array.isArray(bl.data) ? bl.data : bl.data?.data ?? [];
         stats.value.publishedBlogs = allBlogs.filter(
             (b) => b.is_published || b.published === true
         ).length;
     } catch (err) {
         console.error("loadStats error", err);
-        // Silent fail or minimal toast to not annoy user
     }
 };
 
@@ -473,7 +586,6 @@ const loadLatestProjects = async () => {
 
 // Actions
 const markSeen = async (contact) => {
-    // Optimistic UI update (Instant feedback)
     const originalState = contact.is_seen;
     contact.is_seen = true;
     stats.value.unreadContacts = Math.max(0, stats.value.unreadContacts - 1);
@@ -485,7 +597,6 @@ const markSeen = async (contact) => {
         });
         toast.success("Marked as seen");
     } catch (err) {
-        // Revert on failure
         contact.is_seen = originalState;
         stats.value.unreadContacts++;
         toast.error("Could not update status");
@@ -497,6 +608,8 @@ const deleteContact = async (id) => {
         title: "Delete message?",
         text: "This action cannot be undone.",
         icon: "warning",
+        background: "#1e293b",
+        color: "#fff",
         showCancelButton: true,
         confirmButtonColor: "#ef4444",
         cancelButtonColor: "#64748b",
