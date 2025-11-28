@@ -4,43 +4,78 @@ namespace App\Http\Controllers;
 
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SettingController extends Controller
 {
-    // Get all settings from the database
+    // Get settings
     public function index()
     {
         return Setting::first();
     }
 
-    // Post a new setting to the database
-
-    public function store(Request $request)
-    {
-        // create if it doesn't exist
-        if (Setting::count() > 0) {
-            return response()->json([
-                'message' => 'Setting already exists',
-                'data' => Setting::first(),
-            ], 400);
-        } else {
-            $setting = Setting::create($request->all());
-            return response()->json([
-                'message' => 'Setting created successfully',
-                'data'=> $setting
-            ],201);
-
-        }
-    }
-
-    // Update a setting in the database
     public function update(Request $request, string $id)
     {
         $setting = Setting::findOrFail($id);
-        $setting->update($request->all());
+
+        $validated = $request->validate([
+            'site_title'    => 'nullable|string|max:255',
+            'hero_title'    => 'nullable|string|max:255',
+            'hero_subtitle' => 'nullable|string|max:255',
+            'about'         => 'nullable|string',
+            'facebook'      => 'nullable|string',
+            'youtube'       => 'nullable|string',
+            'github'        => 'nullable|string',
+            'linkedin'      => 'nullable|string',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'resume_file'   => 'nullable|mimes:pdf,doc,docx|max:5120',
+        ]);
+
+        $data = $request->except(['profile_image', 'resume_file']);
+
+        if ($request->hasFile('profile_image')) {
+            if ($setting->profile_image) {
+                $oldPath = str_replace('/storage/', '', $setting->profile_image);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+            }
+
+            $path = $request->file('profile_image')->store('settings', 'public');
+            $data['profile_image'] = '/storage/' . $path;
+        }
+
+        if ($request->hasFile('resume_file')) {
+            if ($setting->resume_file) {
+                $oldPath = str_replace('/storage/', '', $setting->resume_file);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+            }
+
+            $path = $request->file('resume_file')->store('resumes', 'public');
+            $data['resume_file'] = '/storage/' . $path;
+        }
+
+        $setting->update($data);
+
         return response()->json([
-            'message' => 'Setting updated successfully',
+            'message' => 'Settings updated successfully',
             'data' => $setting,
         ]);
+    }
+
+    public function store(Request $request)
+    {
+        if (Setting::count() > 0) {
+            return response()->json(['message' => 'Setting already exists'], 400);
+        }
+
+        $setting = Setting::create($request->all());
+
+        return response()->json([
+            'message' => 'Setting created successfully',
+            'data' => $setting
+        ], 201);
     }
 }
