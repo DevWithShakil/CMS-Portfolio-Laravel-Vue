@@ -10,6 +10,7 @@ import BlogDetails from '../pages/BlogDetails.vue'
 import About from '../pages/About.vue'
 import Contact from '../pages/Contact.vue'
 import Projects from '../pages/Projects.vue'
+import NotFound from '../pages/NotFound.vue'
 
 const routes = [
     {
@@ -57,6 +58,13 @@ const routes = [
                 component: Contact,
                 meta: { title: 'Contact' }
             },
+
+            {
+                path: '/:pathMatch(.*)*',
+                name: 'NotFound',
+                component: NotFound,
+                meta: { title: '404 Not Found' }
+            }
 
         ]
     },
