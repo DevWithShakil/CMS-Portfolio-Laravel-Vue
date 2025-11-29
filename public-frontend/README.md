@@ -2,11 +2,6 @@
 
 A modern, high-performance **Portfolio Website** built with **Vue 3** and **Tailwind CSS**. This serves as the public-facing frontend where visitors can view projects, read blogs, check skills, and contact the admin. The content is dynamically fetched from the **Laravel Backend API**.
 
-![Portfolio Preview](https://via.placeholder.com/1200x600/0f172a/ffffff?text=Portfolio+Website+Preview)
-_(Replace this link with your actual screenshot)_
-
----
-
 ## ✨ Key Features
 
 -   **⚡ Ultra Fast & Responsive:** Optimized for all devices (Desktop, Tablet, Mobile).
