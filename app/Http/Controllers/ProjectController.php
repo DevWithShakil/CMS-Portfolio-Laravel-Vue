@@ -13,15 +13,19 @@ class ProjectController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        $query = Project::query();
+{
+    $query = Project::query();
 
-        if ($request->search) {
-            $query->where('title', 'like', "%{$request->search}%");
-        }
-
-        return $query->orderBy('id', 'desc')->paginate(5);
+    if ($request->search) {
+        $query->where('title', 'like', "%{$request->search}%");
     }
+
+    if ($request->has('limit')) {
+        return $query->latest()->limit($request->limit)->get();
+    }
+
+    return $query->orderBy('id', 'desc')->paginate(5);
+}
 
     /**
      * Store a newly created resource in storage.

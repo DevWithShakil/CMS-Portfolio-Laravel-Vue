@@ -29,10 +29,11 @@ Route::get('/test', fn() => ['message' => 'API working fine!']);
 // -----------------------------------------
 // 📌 PUBLIC API (Portfolio Frontend)
 // -----------------------------------------
-Route::prefix('public')->group(function () {
-    Route::get('/projects', [ProjectController::class, 'index']);
-    Route::get('/projects/{id}', [ProjectController::class, 'show']);
-});
+// Route::prefix('public')->group(function () {
+//     Route::get('/projects', [ProjectController::class, 'index']);
+//     Route::get('/projects/{id}', [ProjectController::class, 'show']);
+//     Route::get('/public-search', [GlobalSearchController::class, 'publicSearch']);
+// });
 
 // -----------------------------------------
 // 📌 AUTH
@@ -60,3 +61,10 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::apiResource('categories', BlogCategoryController::class);
 
 });
+
+Route::get('/settings', [SettingController::class, 'index']);
+Route::get('/projects', [ProjectController::class, 'index']);
+Route::get('/skills', [SkillController::class, 'index']);
+Route::get('/experiences', [ExperienceController::class, 'index']);
+Route::get('/education', [EducationController::class, 'index']);
+Route::get('/public-search', [GlobalSearchController::class, 'publicSearch']);

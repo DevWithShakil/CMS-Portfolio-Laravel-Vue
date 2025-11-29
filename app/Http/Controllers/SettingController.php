@@ -10,9 +10,15 @@ class SettingController extends Controller
 {
     // Get settings
     public function index()
-    {
-        return Setting::first();
+{
+    $setting = Setting::first();
+
+    if (!$setting) {
+        return response()->json([]);
     }
+
+    return response()->json($setting);
+}
 
     public function update(Request $request, string $id)
     {

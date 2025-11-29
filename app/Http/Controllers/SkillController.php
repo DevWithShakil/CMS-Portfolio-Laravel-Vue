@@ -7,19 +7,20 @@ use App\Models\Skill;
 
 class SkillController extends Controller
 {
-   public function index(Request $request)
+ public function index(Request $request)
 {
     $query = Skill::query();
 
     if ($request->search) {
-        $query->where('name', 'like', "%{$request->search}%")
-              ->orWhere('category', 'like', "%{$request->search}%");
+        $query->where('name', 'like', "%{$request->search}%");
     }
 
-    return $query->orderBy('id', 'desc')->paginate(10);
+    if ($request->has('all')) {
+        return $query->orderBy('percentage', 'desc')->get();
+    }
+
+    return $query->latest()->paginate(10);
 }
-
-
 
     // Post a new skill to the database
     public function store(Request $request)
