@@ -5,17 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 
 class SettingController extends Controller
 {
     // Get settings
-    public function index()
+public function index()
 {
     $setting = Setting::first();
+    $adminEmail = User::where('is_admin', true)->first()->email ?? 'admin@example.com';
 
-    if (!$setting) {
-        return response()->json([]);
-    }
+    $setting->email = $adminEmail;
 
     return response()->json($setting);
 }

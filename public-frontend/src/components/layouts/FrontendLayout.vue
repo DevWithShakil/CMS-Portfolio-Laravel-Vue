@@ -12,20 +12,13 @@
             </router-view>
         </main>
 
-        <footer
-            class="border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 py-12 mt-20"
-        >
-            <div class="max-w-7xl mx-auto px-6 text-center">
-                <p class="text-sm text-slate-500">
-                    &copy; {{ new Date().getFullYear() }} All rights reserved.
-                </p>
-            </div>
-        </footer>
+        <Footer />
     </div>
 </template>
 
 <script setup>
-import Navbar from "../../components/Navbar.vue"; // Import Navbar
+import Navbar from "../../components/Navbar.vue";
+import Footer from "../../components/Footer.vue";
 </script>
 
 <style scoped>
