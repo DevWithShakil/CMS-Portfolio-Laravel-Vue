@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Blog;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class BlogController extends Controller
 {
@@ -20,23 +21,32 @@ class BlogController extends Controller
         return $query->latest()->paginate(10);
     }
 
-    // Store new blog with Image Upload
+    // Store new blog with Image Upload & Auto Slug
     public function store(Request $request)
     {
+
         $validated = $request->validate([
             'category_id'  => 'required|exists:blog_categories,id',
             'title'        => 'required|string|max:255',
-            'slug'         => 'required|string|unique:blogs,slug',
+            'slug'         => 'nullable|string|unique:blogs,slug',
             'content'      => 'required',
             'is_published' => 'nullable|boolean',
             'thumbnail'    => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
-        if ($request->hasFile('thumbnail')) {
 
-            $path = $request->file('thumbnail')->store('blogs', 'public');
-            $validated['thumbnail'] = '/storage/' . $path; // DB তে পাথ সেভ হবে
+        if (!empty($validated['slug'])) {
+            $validated['slug'] = Str::slug($validated['slug']);
+        } else {
+            $validated['slug'] = Str::slug($validated['title']);
         }
+
+
+        if ($request->hasFile('thumbnail')) {
+            $path = $request->file('thumbnail')->store('blogs', 'public');
+            $validated['thumbnail'] = '/storage/' . $path;
+        }
+
 
         $blog = Blog::create($validated);
 
@@ -57,19 +67,27 @@ class BlogController extends Controller
         ], 200);
     }
 
-    // Update blog with Image Replacement
+    // Update blog with Image Replacement & Auto Slug
     public function update(Request $request, string $id)
     {
         $blog = Blog::findOrFail($id);
 
+
         $validated = $request->validate([
             'category_id'  => 'required|exists:blog_categories,id',
             'title'        => 'required|string|max:255',
-            'slug'         => 'required|string|unique:blogs,slug,' . $id,
+            'slug'         => 'nullable|string|unique:blogs,slug,' . $id,
             'content'      => 'required',
             'is_published' => 'nullable|boolean',
             'thumbnail'    => 'nullable',
         ]);
+
+
+        if (!empty($validated['slug'])) {
+            $validated['slug'] = Str::slug($validated['slug']);
+        } else {
+            $validated['slug'] = Str::slug($validated['title']);
+        }
 
         if ($request->hasFile('thumbnail')) {
 
@@ -96,6 +114,7 @@ class BlogController extends Controller
     public function destroy(string $id)
     {
         $blog = Blog::findOrFail($id);
+
         if ($blog->thumbnail) {
             $oldPath = str_replace('/storage/', '', $blog->thumbnail);
             if (Storage::disk('public')->exists($oldPath)) {

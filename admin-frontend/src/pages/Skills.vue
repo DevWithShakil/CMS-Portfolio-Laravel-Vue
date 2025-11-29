@@ -15,13 +15,11 @@
                     Manage your skills and proficiency levels.
                 </p>
             </div>
-
             <button
                 @click="openCreateModal"
-                class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg shadow-emerald-500/20 transition-all hover:-translate-y-0.5"
+                class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg transition-all hover:-translate-y-0.5"
             >
-                <Plus class="w-5 h-5" />
-                <span>Add Skill</span>
+                <Plus class="w-5 h-5" /> <span>Add Skill</span>
             </button>
         </div>
 
@@ -36,8 +34,8 @@
                     v-model="search"
                     @input="loadSkills('/api/admin/skills')"
                     type="text"
-                    placeholder="Search skills (e.g. Python, Vue)..."
-                    class="w-full bg-slate-950 border border-slate-800 text-slate-200 text-sm rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all placeholder:text-slate-600"
+                    placeholder="Search skills..."
+                    class="w-full bg-slate-950 border border-slate-800 text-slate-200 text-sm rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:border-emerald-500/50 transition-all placeholder:text-slate-600"
                 />
             </div>
             <div class="text-xs text-slate-500 font-medium">
@@ -80,7 +78,6 @@
                 <div
                     class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition-all"
                 ></div>
-
                 <div class="flex justify-between items-start relative z-10">
                     <div class="flex items-center gap-4">
                         <div
@@ -93,19 +90,16 @@
                                 class="w-full h-full object-contain filter drop-shadow-lg"
                             />
                         </div>
-
                         <div>
                             <h3 class="font-bold text-white text-lg">
                                 {{ skill.name }}
                             </h3>
                             <span
                                 class="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-800 text-slate-400 border border-slate-700"
+                                >{{ skill.category }}</span
                             >
-                                {{ skill.category }}
-                            </span>
                         </div>
                     </div>
-
                     <div
                         class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
                     >
@@ -123,7 +117,6 @@
                         </button>
                     </div>
                 </div>
-
                 <div class="mt-6 relative z-10">
                     <div
                         class="flex justify-between text-xs mb-1.5 font-medium"
@@ -221,7 +214,8 @@
                             <X class="w-6 h-6" />
                         </button>
                     </div>
-                    <div class="p-6 space-y-4">
+
+                    <div class="p-6 space-y-5">
                         <div class="space-y-1.5">
                             <label
                                 class="text-xs font-semibold text-slate-400 uppercase"
@@ -231,9 +225,10 @@
                                 v-model="form.name"
                                 type="text"
                                 placeholder="e.g. Python"
-                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all placeholder:text-slate-600"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-emerald-500/50 transition-all placeholder:text-slate-600"
                             />
                         </div>
+
                         <div class="space-y-1.5">
                             <label
                                 class="text-xs font-semibold text-slate-400 uppercase"
@@ -241,34 +236,53 @@
                             >
                             <select
                                 v-model="form.category"
-                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-emerald-500/50 transition-all"
                             >
                                 <option value="Frontend">Frontend</option>
                                 <option value="Backend">Backend</option>
                                 <option value="DevOps">DevOps</option>
                                 <option value="Tools">Tools</option>
+                                <option value="Design">Design</option>
                             </select>
                         </div>
-                        <div class="space-y-1.5">
-                            <label
-                                class="text-xs font-semibold text-slate-400 uppercase"
-                                >Proficiency</label
-                            >
-                            <input
-                                v-model="form.percentage"
-                                type="range"
-                                min="1"
-                                max="100"
-                                class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer accent-emerald-500"
-                            />
+
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <label
+                                    class="text-xs font-semibold text-slate-400 uppercase"
+                                    >Proficiency (%)</label
+                                >
+                                <span class="text-sm font-bold text-emerald-400"
+                                    >{{ form.percentage }}%</span
+                                >
+                            </div>
+
+                            <div class="flex items-center gap-4">
+                                <input
+                                    v-model="form.percentage"
+                                    type="range"
+                                    min="1"
+                                    max="100"
+                                    class="flex-1 h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                                />
+
+                                <input
+                                    v-model="form.percentage"
+                                    type="number"
+                                    min="1"
+                                    max="100"
+                                    class="w-16 bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-center text-slate-200 text-sm focus:outline-none focus:border-emerald-500/50"
+                                />
+                            </div>
                         </div>
                     </div>
+
                     <div
                         class="p-6 border-t border-slate-800 bg-slate-900 flex justify-end gap-3"
                     >
                         <button
                             @click="closeModal"
-                            class="px-5 py-2.5 rounded-xl font-medium text-slate-300 hover:text-white hover:bg-slate-800"
+                            class="px-5 py-2.5 rounded-xl font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
                         >
                             Cancel
                         </button>
@@ -302,7 +316,6 @@ import {
     Code,
 } from "lucide-vue-next";
 
-// State & Logic
 const toast = useToast();
 const skills = ref([]);
 const pagination = ref({});
@@ -322,7 +335,6 @@ const form = ref({
 const getSkillIcon = (name) => {
     if (!name) return "https://cdn.simpleicons.org/codeigniter/gray";
     let slug = name.toLowerCase().replace(/\s+/g, "").replace(/\./g, "");
-
     const map = {
         vuejs: "vuejs",
         vue: "vuejs",
@@ -346,18 +358,13 @@ const getSkillIcon = (name) => {
         tailwind: "tailwindcss",
         tailwindcss: "tailwindcss",
     };
-
     const finalSlug = map[slug] || slug;
     return `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${finalSlug}/${finalSlug}-original.svg`;
 };
-
-// Fallback image if icon not found
 const handleIconError = (e) => {
-    // Fallback to a generic code icon
     e.target.src = "https://cdn.simpleicons.org/codesandbox/gray";
 };
 
-// Helper Functions
 function normalizeUrl(url) {
     if (typeof url !== "string") return url;
     try {

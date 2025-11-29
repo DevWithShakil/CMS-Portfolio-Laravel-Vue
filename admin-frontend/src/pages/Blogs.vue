@@ -263,8 +263,8 @@
                                 <input
                                     v-model="form.slug"
                                     type="text"
-                                    placeholder="article-slug"
-                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 md:py-2.5 text-slate-200 text-sm focus:outline-none focus:border-purple-500/50"
+                                    placeholder="Auto-generated from Title (Optional)"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-purple-500/50"
                                 />
                             </div>
                         </div>
@@ -382,6 +382,7 @@ import { ref, onMounted } from "vue";
 import { useToast } from "vue-toastification";
 import Swal from "sweetalert2";
 import api from "../services/api";
+import { watch } from "vue";
 import {
     Plus,
     Search,
@@ -420,6 +421,24 @@ const form = ref({
     thumbnail: "",
     is_published: false,
 });
+
+// Projects.vue & Blogs.vue
+
+// ...
+
+watch(
+    () => form.value.title,
+    (newTitle) => {
+        if (!editMode.value || !form.value.slug) {
+            form.value.slug = newTitle
+                .toLowerCase()
+                .trim()
+                .replace(/[^\w\s-]/g, "")
+                .replace(/[\s_-]+/g, "-")
+                .replace(/^-+|-+$/g, "");
+        }
+    }
+);
 
 const getThumbnailUrl = (path) => {
     if (!path) return null;
@@ -533,15 +552,32 @@ const updateBlog = async () => {
     }
 };
 
+/* -----------------------------
+   🟢 Toggle Publish
+----------------------------- */
 const togglePublish = async (blog) => {
     try {
-        await api.put(`/api/admin/blogs/${blog.id}`, {
-            is_published: !blog.is_published,
-        });
+        const formData = new FormData();
+
+        formData.append("category_id", blog.category_id);
+        formData.append("title", blog.title);
+        formData.append("slug", blog.slug);
+        formData.append("content", blog.content);
+        formData.append("is_published", blog.is_published ? "0" : "1");
+
+        formData.append("_method", "PUT");
+
+        await api.post(`/api/admin/blogs/${blog.id}`, formData);
+
         loadBlogs();
         toast.success(blog.is_published ? "Unpublished!" : "Published!");
     } catch (e) {
-        toast.error("Update failed");
+        console.error(e);
+        if (e.response && e.response.status === 422) {
+            toast.error("Validation Error: Some required fields are missing.");
+        } else {
+            toast.error("Update failed");
+        }
     }
 };
 

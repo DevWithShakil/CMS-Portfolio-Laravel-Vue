@@ -273,7 +273,8 @@
                                 <input
                                     v-model="form.slug"
                                     type="text"
-                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 text-sm focus:outline-none focus:border-blue-500/50"
+                                    placeholder="Auto-generated from Title (Optional)"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-purple-500/50"
                                 />
                             </div>
                         </div>
@@ -397,6 +398,7 @@
 import { ref, onMounted } from "vue";
 import { useToast } from "vue-toastification";
 import Swal from "sweetalert2";
+import { watch } from "vue";
 import api from "../services/api";
 import {
     Plus,
@@ -431,6 +433,20 @@ const form = ref({
     github_link: "",
     live_link: "",
 });
+
+watch(
+    () => form.value.title,
+    (newTitle) => {
+        if (!editMode.value || !form.value.slug) {
+            form.value.slug = newTitle
+                .toLowerCase()
+                .trim()
+                .replace(/[^\w\s-]/g, "")
+                .replace(/[\s_-]+/g, "-")
+                .replace(/^-+|-+$/g, "");
+        }
+    }
+);
 
 // ✅ URL Helper
 const getThumbnailUrl = (path) => {

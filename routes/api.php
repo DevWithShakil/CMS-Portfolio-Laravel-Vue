@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Cache\RateLimiting\Limit;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\GlobalSearchController;
 use App\Http\Controllers\{
     ProjectController,
     SkillController,
@@ -46,6 +47,8 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/profile', [ProfileController::class, 'index']);
     Route::put('/profile', [ProfileController::class, 'update']);
+    Route::get('/global-search', [GlobalSearchController::class, 'search']);
+    Route::get('/notifications', [GlobalSearchController::class, 'notifications']);
 
     Route::apiResource('projects', ProjectController::class);
     Route::apiResource('skills', SkillController::class);
