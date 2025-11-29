@@ -63,8 +63,12 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
 });
 
 Route::get('/settings', [SettingController::class, 'index']);
+Route::post('/contacts', [ContactController::class, 'store']);
+
 Route::get('/projects', [ProjectController::class, 'index']);
 Route::get('/skills', [SkillController::class, 'index']);
 Route::get('/experiences', [ExperienceController::class, 'index']);
 Route::get('/education', [EducationController::class, 'index']);
+Route::get('/blogs', [BlogController::class, 'index']);
+Route::get('/blogs/{id}', [BlogController::class, 'show']);
 Route::get('/public-search', [GlobalSearchController::class, 'publicSearch']);

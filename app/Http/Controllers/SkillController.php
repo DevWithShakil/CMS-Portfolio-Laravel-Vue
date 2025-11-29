@@ -7,7 +7,7 @@ use App\Models\Skill;
 
 class SkillController extends Controller
 {
- public function index(Request $request)
+public function index(Request $request)
 {
     $query = Skill::query();
 
@@ -21,6 +21,7 @@ class SkillController extends Controller
 
     return $query->latest()->paginate(10);
 }
+
 
     // Post a new skill to the database
     public function store(Request $request)

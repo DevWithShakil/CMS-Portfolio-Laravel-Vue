@@ -10,16 +10,21 @@ use Illuminate\Support\Str;
 class BlogController extends Controller
 {
     // Get blogs with Search and Pagination
-    public function index(Request $request)
-    {
-        $query = Blog::with('category');
+   public function index(Request $request)
+{
 
-        if ($request->search) {
-            $query->where('title', 'like', '%' . $request->search . '%');
-        }
+    $query = Blog::with('category');
 
-        return $query->latest()->paginate(10);
+    if ($request->has('limit')) {
+        return $query->where('is_published', true)->latest()->limit($request->limit)->get();
     }
+
+    if ($request->search) {
+        $query->where('title', 'like', '%' . $request->search . '%');
+    }
+
+    return $query->latest()->paginate(10);
+}
 
     // Store new blog with Image Upload & Auto Slug
     public function store(Request $request)
