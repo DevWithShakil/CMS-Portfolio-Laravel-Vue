@@ -2,10 +2,6 @@
 
 A premium, dark-themed **Admin Dashboard** built with **Vue 3** and **Tailwind CSS**. This serves as the **Content Management System (CMS)** for the Portfolio Website, allowing full control over projects, blogs, skills, and site settings dynamically.
 
-![Dashboard Preview](https://via.placeholder.com/1200x600/0f172a/ffffff?text=Admin+Dashboard+Preview)
-_(Replace this link with your actual screenshot)_
-
----
 
 ## ✨ Key Features
 
