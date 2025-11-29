@@ -51,7 +51,7 @@
                         class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4"
                     >
                         <a
-                            href="#portfolio"
+                            href="/projects"
                             class="px-8 py-4 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold hover:bg-emerald-600 dark:hover:bg-emerald-400 dark:hover:text-white transition-all shadow-xl active:scale-95"
                         >
                             View My Work
