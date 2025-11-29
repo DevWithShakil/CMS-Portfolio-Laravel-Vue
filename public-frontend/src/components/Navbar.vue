@@ -71,7 +71,9 @@
                     href="/#contact"
                     class="hidden md:inline-flex px-5 py-2 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-bold hover:bg-emerald-600 dark:hover:bg-emerald-400 dark:hover:text-white transition-all shadow-lg"
                 >
-                    Let's Talk
+                    <router-link to="/contact" class="..."
+                        >Let's Talk</router-link
+                    >
                 </a>
 
                 <button
@@ -119,7 +121,12 @@
                     href="/#contact"
                     @click="isMobileMenuOpen = false"
                     class="text-lg font-bold text-emerald-600 dark:text-emerald-400"
-                    >Let's Talk →</a
+                    ><router-link
+                        to="/contact"
+                        @click="isMobileMenuOpen = false"
+                        class="..."
+                        >Let's Talk →</router-link
+                    ></a
                 >
             </div>
         </transition>

@@ -9,6 +9,7 @@ import Portfolio from '../pages/Portfolio.vue'
 import Blog from '../pages/Blog.vue'
 import BlogDetails from '../pages/BlogDetails.vue'
 import About from '../pages/About.vue'
+import Contact from '../pages/Contact.vue'
 
 const routes = [
     {
@@ -48,6 +49,13 @@ const routes = [
                 name: 'about',
                 component: About,
                 meta: { title: 'About Me' }
+            },
+
+            {
+                path: 'contact',
+                name: 'contact',
+                component: Contact,
+                meta: { title: 'Contact' }
             },
 
         ]
