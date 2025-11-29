@@ -12,40 +12,43 @@
         >
             <router-link
                 to="/"
-                class="text-2xl font-bold tracking-tight group text-slate-900 dark:text-white"
+                class="text-2xl font-bold tracking-tight group text-slate-900 dark:text-white hover:text-emerald-500 transition-colors"
             >
-                {{ siteTitle
-                }}<span
-                    class="text-emerald-500 group-hover:text-emerald-400 transition-colors"
-                    >.Dev</span
-                >
+                {{ siteTitle }}
             </router-link>
 
-            <nav class="hidden lg:flex items-center gap-8">
+            <nav class="hidden md:flex items-center gap-8">
                 <router-link
                     to="/"
                     class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
                     active-class="text-emerald-600 dark:text-emerald-400 font-bold"
-                    >Home</router-link
                 >
+                    Home
+                </router-link>
+
                 <router-link
                     to="/about"
                     class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
                     active-class="text-emerald-600 dark:text-emerald-400 font-bold"
-                    >About</router-link
                 >
+                    About
+                </router-link>
+
                 <router-link
-                    to="/portfolio"
+                    to="/projects"
                     class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
                     active-class="text-emerald-600 dark:text-emerald-400 font-bold"
-                    >Work</router-link
                 >
+                    Work
+                </router-link>
+
                 <router-link
                     to="/blog"
                     class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
                     active-class="text-emerald-600 dark:text-emerald-400 font-bold"
-                    >Blog</router-link
                 >
+                    Blog
+                </router-link>
             </nav>
 
             <div class="flex items-center gap-3">
@@ -98,7 +101,7 @@
 
                 <button
                     @click="isMobileMenuOpen = !isMobileMenuOpen"
-                    class="lg:hidden p-2 text-slate-600 dark:text-slate-300"
+                    class="md:hidden p-2 text-slate-600 dark:text-slate-300"
                 >
                     <component
                         :is="isMobileMenuOpen ? X : Menu"
@@ -111,30 +114,34 @@
         <transition name="slide-fade">
             <div
                 v-if="isMobileMenuOpen"
-                class="lg:hidden absolute top-20 left-0 w-full bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 shadow-xl p-6 flex flex-col gap-4"
+                class="md:hidden absolute top-20 left-0 w-full bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 shadow-xl p-6 flex flex-col gap-4"
             >
                 <router-link
                     to="/"
                     @click="isMobileMenuOpen = false"
                     class="text-lg font-medium text-slate-600 dark:text-slate-300 hover:text-emerald-500"
+                    active-class="text-emerald-500 font-bold"
                     >Home</router-link
                 >
                 <router-link
                     to="/about"
                     @click="isMobileMenuOpen = false"
                     class="text-lg font-medium text-slate-600 dark:text-slate-300 hover:text-emerald-500"
+                    active-class="text-emerald-500 font-bold"
                     >About</router-link
                 >
                 <router-link
-                    to="/portfolio"
+                    to="/projects"
                     @click="isMobileMenuOpen = false"
                     class="text-lg font-medium text-slate-600 dark:text-slate-300 hover:text-emerald-500"
+                    active-class="text-emerald-500 font-bold"
                     >Work</router-link
                 >
                 <router-link
                     to="/blog"
                     @click="isMobileMenuOpen = false"
                     class="text-lg font-medium text-slate-600 dark:text-slate-300 hover:text-emerald-500"
+                    active-class="text-emerald-500 font-bold"
                     >Blog</router-link
                 >
 
@@ -278,7 +285,7 @@ const toggleDark = useToggle(isDark);
 const isScrolled = ref(false);
 const isMobileMenuOpen = ref(false);
 const siteTitle = ref("Shakil");
-const settings = ref({}); // ✅ Settings state added
+const settings = ref({});
 
 // Search States
 const isSearchOpen = ref(false);
@@ -334,11 +341,11 @@ const handleSearch = () => {
 };
 
 const navigateTo = (url) => {
-    router.push(url.replace("#", "/")); // Simple fix for hash URLs to routes
+    router.push(url.replace("#", "/"));
     closeSearch();
 };
 
-// ✅ Load Settings (Updated to fetch full object)
+// Load Settings
 const loadSettings = async () => {
     try {
         const res = await api.get("/api/settings");
@@ -347,8 +354,7 @@ const loadSettings = async () => {
             : res.data.data || res.data;
         if (data) {
             settings.value = data;
-            if (data.site_title)
-                siteTitle.value = data.site_title.split(" ")[0];
+            if (data.site_title) siteTitle.value = data.site_title;
         }
     } catch (e) {}
 };

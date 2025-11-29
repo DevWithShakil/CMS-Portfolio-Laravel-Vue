@@ -11,17 +11,11 @@
                 <div class="space-y-4">
                     <router-link
                         to="/"
-                        class="text-2xl font-bold tracking-tight text-white group inline-block"
+                        class="text-2xl font-bold tracking-tight text-white group inline-block hover:text-emerald-500 transition-colors"
                     >
-                        {{
-                            settings.site_title
-                                ? settings.site_title.split(" ")[0]
-                                : "Shakil"
-                        }}<span
-                            class="text-emerald-500 group-hover:text-emerald-400 transition-colors"
-                            >.Dev</span
-                        >
+                        {{ settings.site_title || "Portfolio" }}
                     </router-link>
+
                     <p class="text-slate-400 text-sm leading-relaxed max-w-xs">
                         {{
                             settings.hero_subtitle ||
@@ -45,7 +39,7 @@
                     <router-link
                         to="/projects"
                         class="text-slate-400 hover:text-emerald-400 text-sm transition-colors w-fit"
-                        >Projects</router-link
+                        >works</router-link
                     >
                     <router-link
                         to="/blog"
@@ -67,47 +61,40 @@
                             :href="settings.github"
                             target="_blank"
                             class="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-emerald-500 hover:bg-emerald-500/10 transition-all"
-                        >
-                            <Github class="w-5 h-5" />
-                        </a>
+                            ><Github class="w-5 h-5"
+                        /></a>
                         <a
                             v-if="settings.linkedin"
                             :href="settings.linkedin"
                             target="_blank"
                             class="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-blue-500 hover:bg-blue-500/10 transition-all"
-                        >
-                            <Linkedin class="w-5 h-5" />
-                        </a>
+                            ><Linkedin class="w-5 h-5"
+                        /></a>
                         <a
                             v-if="settings.facebook"
                             :href="settings.facebook"
                             target="_blank"
                             class="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-blue-600 hover:bg-blue-600/10 transition-all"
-                        >
-                            <Facebook class="w-5 h-5" />
-                        </a>
+                            ><Facebook class="w-5 h-5"
+                        /></a>
                         <a
                             v-if="settings.youtube"
                             :href="settings.youtube"
                             target="_blank"
                             class="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-red-500 hover:bg-red-500/10 transition-all"
-                        >
-                            <Youtube class="w-5 h-5" />
-                        </a>
+                            ><Youtube class="w-5 h-5"
+                        /></a>
                     </div>
 
                     <div class="mt-6">
                         <a
-                            v-if="settings.contact_email || settings.email"
-                            :href="`mailto:${
-                                settings.contact_email || settings.email
-                            }`"
+                            v-if="settings.email"
+                            :href="`mailto:${settings.email}`"
                             class="text-sm text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-2"
                         >
                             <Mail class="w-4 h-4" />
-                            {{ settings.contact_email || settings.email }}
+                            {{ settings.email }}
                         </a>
-
                         <a
                             v-else
                             href="mailto:admin@example.com"
@@ -125,7 +112,8 @@
             >
                 <p class="text-slate-500 text-sm">
                     &copy; {{ new Date().getFullYear() }}
-                    {{ settings.site_title }}. All rights reserved.
+                    {{ settings.site_title || "Portfolio" }}. All rights
+                    reserved.
                 </p>
                 <p class="text-slate-600 text-xs flex items-center gap-1">
                     Made with

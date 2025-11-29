@@ -3,23 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Models\User;
 
 class SettingController extends Controller
 {
     // Get settings
-public function index()
-{
-    $setting = Setting::first();
-    $adminEmail = User::where('is_admin', true)->first()->email ?? 'admin@example.com';
+    public function index()
+    {
+        $setting = Setting::first();
 
-    $setting->email = $adminEmail;
+        if (!$setting) {
+            return response()->json([
+                'site_title' => 'My Portfolio',
+                'email' => 'admin@example.com'
+            ]);
+        }
 
-    return response()->json($setting);
-}
+        $admin = User::where('is_admin', true)->first();
+        $adminEmail = $admin ? $admin->email : 'admin@example.com';
 
+        $setting->email = $adminEmail;
+
+        return response()->json($setting);
+    }
+
+    // Update settings
     public function update(Request $request, string $id)
     {
         $setting = Setting::findOrFail($id);
@@ -46,7 +56,6 @@ public function index()
                     Storage::disk('public')->delete($oldPath);
                 }
             }
-
             $path = $request->file('profile_image')->store('settings', 'public');
             $data['profile_image'] = '/storage/' . $path;
         }
@@ -58,12 +67,15 @@ public function index()
                     Storage::disk('public')->delete($oldPath);
                 }
             }
-
             $path = $request->file('resume_file')->store('resumes', 'public');
             $data['resume_file'] = '/storage/' . $path;
         }
 
         $setting->update($data);
+
+        // আপডেটেড অবজেক্টের সাথে ইমেল আবার পাঠিয়ে দিচ্ছি
+        $admin = User::where('is_admin', true)->first();
+        $setting->email = $admin ? $admin->email : 'admin@example.com';
 
         return response()->json([
             'message' => 'Settings updated successfully',
@@ -71,6 +83,7 @@ public function index()
         ]);
     }
 
+    // Store (Create)
     public function store(Request $request)
     {
         if (Setting::count() > 0) {
