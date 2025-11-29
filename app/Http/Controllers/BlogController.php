@@ -63,14 +63,21 @@ class BlogController extends Controller
 
     // Show single blog
     public function show($id)
-    {
+{
+    if (is_numeric($id)) {
         $blog = Blog::with('category')->findOrFail($id);
-
-        return response()->json([
-            'message' => 'Blog found successfully',
-            'data' => $blog,
-        ], 200);
+    } else {
+        $blog = Blog::with('category')
+            ->where('slug', $id)
+            ->where('is_published', true)
+            ->firstOrFail();
     }
+
+    return response()->json([
+        'message' => 'Blog found successfully',
+        'data' => $blog,
+    ], 200);
+}
 
     // Update blog with Image Replacement & Auto Slug
     public function update(Request $request, string $id)

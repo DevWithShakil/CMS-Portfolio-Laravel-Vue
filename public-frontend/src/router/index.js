@@ -7,6 +7,7 @@ import FrontendLayout from '../components/layouts/FrontendLayout.vue'
 import Home from '../pages/Home.vue'
 import Portfolio from '../pages/Portfolio.vue'
 import Blog from '../pages/Blog.vue'
+import BlogDetails from '../pages/BlogDetails.vue'
 
 const routes = [
     {
@@ -32,6 +33,13 @@ const routes = [
                 name: 'blog',
                 component: Blog,
                 meta: { title: 'Blog' }
+            },
+
+            {
+                path: 'blog/:slug',
+                name: 'blog-details',
+                component: BlogDetails,
+                meta: { title: 'Article' }
             },
 
         ]
