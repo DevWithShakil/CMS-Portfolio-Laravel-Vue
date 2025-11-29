@@ -5,11 +5,11 @@ import FrontendLayout from '../components/layouts/FrontendLayout.vue'
 
 // Pages
 import Home from '../pages/Home.vue'
-import Portfolio from '../pages/Portfolio.vue'
 import Blog from '../pages/Blog.vue'
 import BlogDetails from '../pages/BlogDetails.vue'
 import About from '../pages/About.vue'
 import Contact from '../pages/Contact.vue'
+import Projects from '../pages/Projects.vue'
 
 const routes = [
     {
@@ -24,10 +24,10 @@ const routes = [
             },
 
             {
-                path: 'portfolio',
-                name: 'portfolio',
-                component: Portfolio,
-                meta: { title: 'Portfolio' }
+                path: 'projects',
+                name: 'projects',
+                component: Projects,
+                meta: { title: 'Projects' }
             },
 
             {

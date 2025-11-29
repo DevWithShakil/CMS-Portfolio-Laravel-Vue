@@ -43,7 +43,7 @@
                             target="_blank"
                             class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold hover:bg-emerald-600 dark:hover:bg-emerald-400 dark:hover:text-white transition-all shadow-lg"
                         >
-                            <Download class="w-4 h-4" /> Download CV
+                            <Download class="w-4 h-4" /> See Resume
                         </a>
                     </div>
                 </div>

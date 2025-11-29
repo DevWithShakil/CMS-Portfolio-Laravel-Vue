@@ -63,44 +63,11 @@
                             target="_blank"
                             class="px-8 py-4 rounded-full border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-white font-bold hover:border-emerald-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all flex items-center justify-center gap-2 group bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm"
                         >
-                            <span>Download CV</span>
+                            <span>See Resume</span>
                             <Download
                                 class="w-4 h-4 group-hover:translate-y-1 transition-transform"
                             />
                         </a>
-                    </div>
-
-                    <div
-                        class="flex justify-center lg:justify-start gap-6 pt-4"
-                    >
-                        <a
-                            v-if="settings.github"
-                            :href="settings.github"
-                            target="_blank"
-                            class="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-                            ><Github class="w-6 h-6"
-                        /></a>
-                        <a
-                            v-if="settings.linkedin"
-                            :href="settings.linkedin"
-                            target="_blank"
-                            class="text-slate-400 hover:text-blue-500 transition-colors"
-                            ><Linkedin class="w-6 h-6"
-                        /></a>
-                        <a
-                            v-if="settings.facebook"
-                            :href="settings.facebook"
-                            target="_blank"
-                            class="text-slate-400 hover:text-blue-600 transition-colors"
-                            ><Facebook class="w-6 h-6"
-                        /></a>
-                        <a
-                            v-if="settings.youtube"
-                            :href="settings.youtube"
-                            target="_blank"
-                            class="text-slate-400 hover:text-red-500 transition-colors"
-                            ><Youtube class="w-6 h-6"
-                        /></a>
                     </div>
                 </div>
 
@@ -219,7 +186,7 @@
                         </p>
                     </div>
                     <router-link
-                        to="/portfolio"
+                        to="/projects"
                         class="text-emerald-500 font-bold hover:underline flex items-center gap-1"
                         >View All <ArrowRight class="w-4 h-4"
                     /></router-link>
