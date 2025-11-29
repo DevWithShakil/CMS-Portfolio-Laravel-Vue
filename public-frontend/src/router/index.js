@@ -6,6 +6,7 @@ import FrontendLayout from '../components/layouts/FrontendLayout.vue'
 // Pages
 import Home from '../pages/Home.vue'
 import Portfolio from '../pages/Portfolio.vue'
+import Blog from '../pages/Blog.vue'
 
 const routes = [
     {
@@ -24,6 +25,13 @@ const routes = [
                 name: 'portfolio',
                 component: Portfolio,
                 meta: { title: 'Portfolio' }
+            },
+
+            {
+                path: 'blog',
+                name: 'blog',
+                component: Blog,
+                meta: { title: 'Blog' }
             },
 
         ]
