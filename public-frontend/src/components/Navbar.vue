@@ -22,26 +22,34 @@
             </router-link>
 
             <nav class="hidden md:flex items-center gap-8">
-                <a
-                    href="#home"
+                <router-link
+                    to="/"
                     class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
-                    >Home</a
+                    active-class="text-emerald-600 dark:text-emerald-400 font-bold"
                 >
-                <a
-                    href="#portfolio"
+                    Home
+                </router-link>
+                <router-link
+                    to="/about"
                     class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
-                    >Work</a
+                    active-class="text-emerald-600 dark:text-emerald-400 font-bold"
                 >
-                <a
-                    href="#skills"
+                    About
+                </router-link>
+                <router-link
+                    to="/portfolio"
                     class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
-                    >Skills</a
+                    active-class="text-emerald-600 dark:text-emerald-400 font-bold"
                 >
-                <a
-                    href="#blog"
+                    Work
+                </router-link>
+                <router-link
+                    to="/blog"
                     class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
-                    >Blog</a
+                    active-class="text-emerald-600 dark:text-emerald-400 font-bold"
                 >
+                    Blog
+                </router-link>
             </nav>
 
             <div class="flex items-center gap-3">
@@ -60,7 +68,7 @@
                 </button>
 
                 <a
-                    href="#contact"
+                    href="/#contact"
                     class="hidden md:inline-flex px-5 py-2 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-bold hover:bg-emerald-600 dark:hover:bg-emerald-400 dark:hover:text-white transition-all shadow-lg"
                 >
                     Let's Talk
@@ -70,10 +78,51 @@
                     @click="isMobileMenuOpen = !isMobileMenuOpen"
                     class="md:hidden p-2 text-slate-600 dark:text-slate-300"
                 >
-                    <Menu class="w-6 h-6" />
+                    <component
+                        :is="isMobileMenuOpen ? X : Menu"
+                        class="w-6 h-6"
+                    />
                 </button>
             </div>
         </div>
+
+        <transition name="slide-fade">
+            <div
+                v-if="isMobileMenuOpen"
+                class="md:hidden absolute top-20 left-0 w-full bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 shadow-xl p-6 flex flex-col gap-4"
+            >
+                <router-link
+                    to="/"
+                    @click="isMobileMenuOpen = false"
+                    class="text-lg font-medium text-slate-600 dark:text-slate-300 hover:text-emerald-500"
+                    >Home</router-link
+                >
+                <router-link
+                    to="/about"
+                    @click="isMobileMenuOpen = false"
+                    class="text-lg font-medium text-slate-600 dark:text-slate-300 hover:text-emerald-500"
+                    >About</router-link
+                >
+                <router-link
+                    to="/portfolio"
+                    @click="isMobileMenuOpen = false"
+                    class="text-lg font-medium text-slate-600 dark:text-slate-300 hover:text-emerald-500"
+                    >Work</router-link
+                >
+                <router-link
+                    to="/blog"
+                    @click="isMobileMenuOpen = false"
+                    class="text-lg font-medium text-slate-600 dark:text-slate-300 hover:text-emerald-500"
+                    >Blog</router-link
+                >
+                <a
+                    href="/#contact"
+                    @click="isMobileMenuOpen = false"
+                    class="text-lg font-bold text-emerald-600 dark:text-emerald-400"
+                    >Let's Talk →</a
+                >
+            </div>
+        </transition>
 
         <transition name="fade">
             <div
@@ -104,6 +153,7 @@
                         <div
                             v-for="(item, index) in searchResults"
                             :key="index"
+                            @click="navigateTo(item.url)"
                             class="group flex items-center gap-4 p-4 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-900 transition-all cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-slate-800"
                         >
                             <div
@@ -114,7 +164,6 @@
                                     class="w-6 h-6"
                                 />
                             </div>
-
                             <div>
                                 <h3
                                     class="text-lg font-bold text-slate-800 dark:text-slate-200 group-hover:text-emerald-500 transition-colors"
@@ -126,7 +175,6 @@
                                     >{{ item.type }}</span
                                 >
                             </div>
-
                             <ArrowRight
                                 class="w-5 h-5 ml-auto text-slate-300 group-hover:text-emerald-500 -translate-x-2 group-hover:translate-x-0 transition-all opacity-0 group-hover:opacity-100"
                             />
@@ -147,6 +195,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, nextTick } from "vue";
+import { useRouter } from "vue-router"; // Router Import
 import { useDark, useToggle } from "@vueuse/core";
 import {
     Sun,
@@ -161,6 +210,7 @@ import {
 } from "lucide-vue-next";
 import api from "../services/api";
 
+const router = useRouter(); // Router Initialize
 const isDark = useDark();
 const toggleDark = useToggle(isDark);
 const isScrolled = ref(false);
@@ -179,16 +229,15 @@ const handleScroll = () => {
     isScrolled.value = window.scrollY > 50;
 };
 
-// Helper: Get Icon
 const getIcon = (type) => {
     if (type === "Project") return Layers;
     if (type === "Skill") return Award;
     return FileText;
 };
 
-// Search Logic
 const openSearch = async () => {
     isSearchOpen.value = true;
+    isMobileMenuOpen.value = false; // Close menu if open
     await nextTick();
     searchInputRef.value?.focus();
 };
@@ -209,7 +258,6 @@ const handleSearch = () => {
     isLoading.value = true;
     searchTimeout = setTimeout(async () => {
         try {
-            // Public API Call
             const res = await api.get("/api/public-search", {
                 params: { q: searchQuery.value },
             });
@@ -222,7 +270,29 @@ const handleSearch = () => {
     }, 300);
 };
 
-// Load Settings (Title)
+// Navigate to page from search result
+const navigateTo = (url) => {
+    // If URL is a hash (e.g. #portfolio), scroll to it
+    if (url.startsWith("#")) {
+        const el = document.querySelector(url);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+        // If on another page, go to home first
+        else
+            router.push("/").then(() => {
+                setTimeout(
+                    () =>
+                        document
+                            .querySelector(url)
+                            ?.scrollIntoView({ behavior: "smooth" }),
+                    500
+                );
+            });
+    } else {
+        router.push(url);
+    }
+    closeSearch();
+};
+
 const loadSettings = async () => {
     try {
         const res = await api.get("/api/settings");

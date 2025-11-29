@@ -8,6 +8,7 @@ import Home from '../pages/Home.vue'
 import Portfolio from '../pages/Portfolio.vue'
 import Blog from '../pages/Blog.vue'
 import BlogDetails from '../pages/BlogDetails.vue'
+import About from '../pages/About.vue'
 
 const routes = [
     {
@@ -40,6 +41,13 @@ const routes = [
                 name: 'blog-details',
                 component: BlogDetails,
                 meta: { title: 'Article' }
+            },
+
+            {
+                path: 'about',
+                name: 'about',
+                component: About,
+                meta: { title: 'About Me' }
             },
 
         ]
