@@ -39,14 +39,22 @@ RUN chmod -R 777 /app/storage /app/bootstrap/cache
 
 # ---------- Startup Script ----------
 RUN echo '#!/bin/sh\n\
-echo \"Waiting for 5 seconds before starting...\" \n\
-sleep 5 \n\
-echo \"Running migrations...\" \n\
-php artisan migrate --force || true \n\
-echo \"Linking storage...\" \n\
-php artisan storage:link || true \n\
-echo \"Starting Laravel server...\" \n\
-php artisan serve --host=0.0.0.0 --port=8000' \
+set -e\n\
+\n\
+echo \"[1/4] Waiting for Database...\"\n\
+until php -r \"try { new PDO(getenv(\\\"DATABASE_URL\\\")); echo \\\"DB OK\\\"; } catch (Exception \$e) { exit(1); }\"; do\n\
+  echo \"DB not ready... retrying in 3 seconds\";\n\
+  sleep 3;\n\
+done\n\
+\n\
+echo \"[2/4] Running migrations...\"\n\
+php artisan migrate --force || true\n\
+\n\
+echo \"[3/4] Linking storage...\"\n\
+php artisan storage:link || true\n\
+\n\
+echo \"[4/4] Starting Laravel server...\"\n\
+php artisan serve --host=0.0.0.0 --port=8000\n' \
 > /usr/local/bin/startup.sh
 
 RUN chmod +x /usr/local/bin/startup.sh
