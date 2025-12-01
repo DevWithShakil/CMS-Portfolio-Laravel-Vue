@@ -50,11 +50,13 @@ until php -r "try { new PDO(getenv(\"DB_CONNECTION\") . \":host=\" . getenv(\"DB
   echo "DB not ready... retrying in 3 seconds..."\n\
   sleep 3\n\
 done\n\
-echo "Running migrations..."\n\
-php artisan migrate --force\n\
-php artisan storage:link\n\
-echo "Starting Laravel server..."\n\
+echo '#!/bin/sh\n\
+echo "Waiting for 5 seconds before starting..." \n\
+sleep 5 \n\
+php artisan migrate --force \n\
+php artisan storage:link \n\
 php artisan serve --host=0.0.0.0 --port=8000' > /usr/local/bin/startup.sh
+
 
 RUN chmod +x /usr/local/bin/startup.sh
 
