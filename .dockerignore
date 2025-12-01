@@ -1,0 +1,11 @@
+admin-frontend
+public-frontend
+node_modules
+npm-debug.log
+.git
+.gitignore
+vendor
+storage/logs
+storage/framework/sessions
+storage/framework/cache
+storage/framework/views
